@@ -1,0 +1,16 @@
+RewriteEngine on
+
+# If an existing asset or directory is requested go to it as it is
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f [OR]  
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d [OR]
+RewriteCond %{REQUEST_URI} \.(js)$
+RewriteRule ^.*/js/(.*)\.js$ js/$1.js [L]
+
+# If the requested resource doesn't exist, use index.html
+
+Options +FollowSymLinks
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !index
+RewriteRule (.*) index.html [L]
