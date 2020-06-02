@@ -1,54 +1,99 @@
-import React from 'react';
-import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, {Component} from 'react';
+import {BrowserRouter as Router, Switch, Route, Redirect, Link} from 'react-router-dom';
+import {gapi} from "gapi-script";
+
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import './App.css';
+import './App.scss';
 
-import Development from './components/Development';
-import DevelopmentAdd from './components/DevelopmentAdd';
-import DevelopmentList from './components/DevelopmentList';
+import Blogs from './components/Blogs';
 
-function App() {
-    return (
-        <Router>
-            <div>
-                <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-                    <div className="container">
-                        <a href="/" className="navbar-brand">
-                            AWFT
-                        </a>
-                        <button className="navbar-toggler" type="button" data-toggle="collapse"
-                                data-target="#mobile-navbar" aria-controls="mobile-navbar" aria-expanded="false"
-                                aria-label="Toggle navigation">
-                            <span className="navbar-toggler-icon"></span>
-                        </button>
-                        <div className="collapse navbar-collapse" id="mobile-navbar">
-                            <ul className="navbar-nav">
-                                <li className="nav-item">
-                                    <Link to={"/development"} className="nav-link">
-                                        Development
-                                    </Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link to={"/add"} className="nav-link">
-                                        Add
-                                    </Link>
-                                </li>
-                            </ul>
+
+class App extends Component {
+
+    GoogleAuth;
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            btnText: "Login",
+            user: null,
+        }
+        this.setSignInStatus = this.setSignInStatus.bind(this);
+        this.updateSignInStatus = this.updateSignInStatus.bind(this);
+    }
+
+
+    componentDidMount() {
+        gapi.load('client:auth2', () => {
+            gapi.client.init({
+                'client_id': '835840484437-f27qtek3epp6n65s8gu41gv6i95n44l5.apps.googleusercontent.com',
+                'scope': 'https://www.googleapis.com/auth/blogger'
+            }).then(() => {
+                this.GoogleAuth = gapi.auth2.getAuthInstance();
+                this.GoogleAuth.isSignedIn.listen(this.updateSignInStatus);
+                this.setSignInStatus();
+            })
+        })
+    }
+
+    handleAuthClick() {
+        if (this.GoogleAuth.isSignedIn.get()) {
+            this.GoogleAuth.signOut()
+        } else {
+            this.GoogleAuth.signIn()
+        }
+    }
+
+    setSignInStatus() {
+        let user = this.GoogleAuth.currentUser.get();
+        let isAuthorized = user.hasGrantedScopes('https://www.googleapis.com/auth/blogger');
+        if (isAuthorized) {
+            this.setState({
+                user: {
+                    name: user.getBasicProfile().getName()
+                }
+            })
+            console.log(`${this.state.user.name} signed in`);
+            this.setState({btnText: "Logout"})
+        } else {
+            console.log(`${this.state.user.name} signed out`);
+            this.setState({btnText: "Login"})
+            this.setState({user: null})
+        }
+    }
+
+    updateSignInStatus() {
+        this.setSignInStatus();
+    }
+
+    render() {
+        return (
+            <Router>
+                <div>
+                    <nav className="navbar fixed-top navbar-expand-lg navbar-light bg-light mb-4">
+                        <div className="container">
+                            <Link to={"/"} className="navbar-brand">
+                                AWFT
+                            </Link>
+                            <button className="btn btn-outline-dark" id="googleLogin" onClick={() => {
+                                this.handleAuthClick()
+                            }}>
+                                {this.state.btnText}
+                            </button>
                         </div>
-                    </div>
-                </nav>
+                    </nav>
 
-                <div className="container mt-3">
-                    <Switch>
-                        <Route exact path={["/", "/development"]} component={DevelopmentList}/>
-                        <Route exact path="/add" component={DevelopmentAdd}/>
-                        <Route path="/development/:id" component={Development}/>
-                    </Switch>
+                    <div className="container">
+                        <Switch>
+                            <Route path="/" exact
+                                   render={() => <Blogs name={this.state.user ? this.state.user.name : null}/>}/>
+                            {!this.state.user && <Redirect to={"/"} />}
+                        </Switch>
+                    </div>
                 </div>
-            </div>
-        </Router>
-    );
+            </Router>
+        );
+    }
 }
 
 export default App;

@@ -1,4 +1,14 @@
 import http from "../http-common";
+/*
+ * TODO:
+ *  - GetBlogs
+ *  - GetPosts
+ *  - GetPosts:id
+ *  - CreatePost
+ *  - UpdatePost:id
+ *  - DeletePost:id
+ *  - (Find Posts)
+ */
 
 const getAll = () => {
     return http.get("/development");
