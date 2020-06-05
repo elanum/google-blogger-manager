@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {BrowserRouter as Router, Switch, Route, Redirect, Link} from 'react-router-dom';
 import {gapi} from "gapi-script";
 
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import M from "materialize-css/dist/js/materialize.min.js";
 import './App.scss';
 
 import Blogs from './components/Blogs';
@@ -24,6 +24,19 @@ class App extends Component {
 
 
     componentDidMount() {
+        this.initSidenav();
+        this.initGAPI();
+    }
+
+    initSidenav() {
+        let element = document.querySelector('.sidenav');
+        M.Sidenav.init(element, {
+            edge: 'left',
+            inDuration: 250
+        });
+    }
+
+    initGAPI() {
         gapi.load('client:auth2', () => {
             gapi.client.init({
                 'client_id': '835840484437-f27qtek3epp6n65s8gu41gv6i95n44l5.apps.googleusercontent.com',
@@ -53,12 +66,12 @@ class App extends Component {
                     name: user.getBasicProfile().getName()
                 }
             })
-            console.log(`${this.state.user.name} signed in`);
             this.setState({btnText: "Logout"})
+            M.toast({html: 'Logged in!'})
         } else {
-            console.log(`${this.state.user.name} signed out`);
             this.setState({btnText: "Login"})
             this.setState({user: null})
+            M.toast({html: 'Logged out!'})
         }
     }
 
@@ -69,28 +82,39 @@ class App extends Component {
     render() {
         return (
             <Router>
-                <div>
-                    <nav className="navbar fixed-top navbar-expand-lg navbar-light bg-light mb-4">
-                        <div className="container">
-                            <Link to={"/"} className="navbar-brand">
-                                AWFT
-                            </Link>
-                            <button className="btn btn-outline-dark" id="googleLogin" onClick={() => {
-                                this.handleAuthClick()
-                            }}>
-                                {this.state.btnText}
-                            </button>
+                <header>
+                    <nav className="hide-on-large-only">
+                        <div className="nav-wrapper">
+                            <span className="brand-logo">AWFT</span>
+                            <a href="/#" data-target="nav-mobile"
+                               className="top-nav sidenav-trigger full"><i
+                                className="material-icons">menu</i></a>
                         </div>
                     </nav>
+                    <ul id="nav-mobile" className="sidenav sidenav-fixed">
+                        <li>
+                            <div className="user-view deep-orange">
+                                <img className="circle" src="https://placeimg.com/64/64/people" alt="profile"/>
+                                <span className="white-text name">Max Mustermann</span>
+                                <span className="white-text email">max@mustermann.de</span>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="/#" className="waves-effect" onClick={() => this.handleAuthClick()}><i
+                                className="material-icons">input</i> {this.state.btnText}</a>
+                        </li>
+                    </ul>
+                </header>
 
+                <main>
                     <div className="container">
                         <Switch>
                             <Route path="/" exact
                                    render={() => <Blogs name={this.state.user ? this.state.user.name : null}/>}/>
-                            {!this.state.user && <Redirect to={"/"} />}
+                            {!this.state.user && <Redirect to={"/"}/>}
                         </Switch>
                     </div>
-                </div>
+                </main>
             </Router>
         );
     }

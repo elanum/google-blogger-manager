@@ -1,24 +1,15 @@
-/* Boostrap Overrides */
+/* Color Theme */
+@import "node_modules/materialize-css/sass/components/color-variables";
+$primary-color: color("deep-orange", "base") !default;
+$secondary-color: color("deep-orange", "lighten-1") !default;
 
-body {
-  padding-top: 4.5rem;
-}
+/* Materialize */
+@import 'node_modules/materialize-css/sass/materialize';
 
-@import "node_modules/bootstrap/scss/bootstrap";
-
-/* Main Styles */
-.list {
-  text-align: left;
-  max-width: 750px;
-  margin: auto;
-}
-
-.submit-form {
-  max-width: 300px;
-  margin: auto;
-}
-
-.edit-form {
-  max-width: 300px;
-  margin: auto;
+/* Custom CSS */
+header, main, footer {
+  padding-left: 300px;
+  @media only screen and (max-width: 992px) {
+    padding-left: 0;
+  }
 }

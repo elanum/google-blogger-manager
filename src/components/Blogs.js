@@ -6,18 +6,18 @@ class Blogs extends Component {
         return (
             <div>
                 {!this.props.name ?
-                    <div className="jumbotron">
-                        <h1 className="display-4">Welcome to AWFT</h1>
-                        <p className="lead">An App to manage your <i>Blogs and Posts</i> from <strong>Google
+                    <div>
+                        <h1>Welcome to AWFT</h1>
+                        <p>An App to manage your <i>Blogs and Posts</i> from <strong>Google
                             Blogger.</strong></p>
-                        <hr className="my-4"/>
+                        <div className="divider" />
                         <p>To see content, please login with your Google Account.</p>
                     </div>
                     :
                     <div className="jumbotron">
-                        <h1 className="display-4">Welcome {this.props.name}</h1>
-                        <p className="lead">This page is WIP</p>
-                        <hr className="my-4"/>
+                        <h1>Welcome {this.props.name}</h1>
+                        <p>This page is WIP</p>
+                        <div className="divider" />
                         <p>Cool stuff will happen here</p>
                     </div>
                 }
