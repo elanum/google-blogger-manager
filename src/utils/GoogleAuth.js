@@ -5,7 +5,10 @@ import M from "materialize-css/dist/js/materialize.min.js";
 const AuthContext = React.createContext();
 
 class AuthProvider extends Component {
-    state = {isSignedIn: null}
+    state = {
+        isSignedIn: null,
+        user: null
+    }
 
     constructor(props) {
         super(props);
@@ -27,7 +30,18 @@ class AuthProvider extends Component {
     };
 
     handleAuthChange = () => {
-        this.setState({isSignedIn: this.auth.isSignedIn.get()});
+        let signInStatus = this.auth.isSignedIn.get();
+        if (signInStatus) {
+            let basicProfile = this.auth.currentUser.get().getBasicProfile();
+            this.setState({
+                user: {
+                    name: basicProfile.getName(),
+                    email: basicProfile.getEmail(),
+                    image: basicProfile.getImageUrl()
+                }
+            })
+        }
+        this.setState({isSignedIn: signInStatus});
     };
 
     handleSignIn() {
@@ -47,7 +61,7 @@ class AuthProvider extends Component {
             <AuthContext.Provider
                 value={{
                     isSignedIn: this.state.isSignedIn,
-                    google: this.auth,
+                    user: this.state.user,
                     login: this.handleSignIn,
                     logout: this.handleSignOut
                 }}

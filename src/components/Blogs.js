@@ -1,15 +1,31 @@
-import React, {Component} from "react";
+import React, {useEffect, useState} from "react";
+import Requests from "../utils/Requests";
 
 
-class Blogs extends Component {
-    render() {
-        return (
-            <div className="container">
-                <h1>Blogs</h1>
-                <p>This content will show after login</p>
-            </div>
-        )
+const Blogs = () => {
+    const [blogs, setBlogs] = useState([]);
+
+    useEffect(() => {
+        retrieveBlogs();
+    }, []);
+
+    const retrieveBlogs = () => {
+        Requests.getAllBlogs(results => {
+            setBlogs(results);
+        })
     }
+
+    return (
+        <div className="container">
+            <h1>Blogs</h1>
+            <ul className="collection">
+                {blogs &&
+                blogs.map((blog) => (
+                    <li className="collection-item" key={blog.id}>{blog.name}</li>
+                ))}
+            </ul>
+        </div>
+    )
 }
 
 export default Blogs;
