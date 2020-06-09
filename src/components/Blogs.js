@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import Requests from "../utils/Requests";
+import Requests from "./Requests";
 
 
 const Blogs = () => {

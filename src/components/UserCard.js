@@ -1,7 +1,7 @@
-import React, {Component, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {AuthConsumer} from "../utils/GoogleAuth";
-import Requests from "../utils/Requests";
+import {AuthConsumer} from "./GoogleAuth";
+import Requests from "./Requests";
 
 const UserCard = () => {
     const [blogs, setBlogs] = useState([]);

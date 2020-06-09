@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {AuthConsumer} from "../utils/GoogleAuth";
+import {AuthConsumer} from "./GoogleAuth";
 import M from 'materialize-css'
 import UserCard from "./UserCard";
 
