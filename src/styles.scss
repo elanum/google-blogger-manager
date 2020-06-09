@@ -1,0 +1,36 @@
+/* Color Theme */
+@import "node_modules/materialize-css/sass/components/color-variables";
+$primary-color: color("deep-orange", "base") !default;
+$secondary-color: color("deep-orange", "lighten-1") !default;
+
+/* Materialize */
+@import 'node_modules/materialize-css/sass/materialize';
+
+/* Custom CSS */
+header, main, footer {
+  padding-left: 300px;
+  @media only screen and (max-width: 992px) {
+    padding-left: 0;
+  }
+}
+
+.sidenav {
+  .collapsible-header {
+    padding: 0 32px;
+  }
+  .collapsible-body li > a {
+    padding: 0 23.5px 0 47px;
+  }
+  .collapsible li.active i {
+    -ms-transform: rotate(180deg); /* IE 9 */
+    -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+    transform: rotate(180deg);
+  }
+
+  li > button {
+    color: rgba(0, 0, 0, 0.87);
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+  }
+}

@@ -1,29 +1,31 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from "react";
+import Requests from "./Requests";
 
 
-class Blogs extends Component {
-    render() {
-        return (
-            <div>
-                {!this.props.name ?
-                    <div className="jumbotron">
-                        <h1 className="display-4">Welcome to AWFT</h1>
-                        <p className="lead">An App to manage your <i>Blogs and Posts</i> from <strong>Google
-                            Blogger.</strong></p>
-                        <hr className="my-4"/>
-                        <p>To see content, please login with your Google Account.</p>
-                    </div>
-                    :
-                    <div className="jumbotron">
-                        <h1 className="display-4">Welcome {this.props.name}</h1>
-                        <p className="lead">This page is WIP</p>
-                        <hr className="my-4"/>
-                        <p>Cool stuff will happen here</p>
-                    </div>
-                }
-            </div>
-        )
+const Blogs = () => {
+    const [blogs, setBlogs] = useState([]);
+
+    useEffect(() => {
+        retrieveBlogs();
+    }, []);
+
+    const retrieveBlogs = () => {
+        Requests.getAllBlogs(results => {
+            setBlogs(results);
+        })
     }
+
+    return (
+        <div className="container">
+            <h1>Blogs</h1>
+            <ul className="collection">
+                {blogs &&
+                blogs.map((blog) => (
+                    <li className="collection-item" key={blog.id}>{blog.name}</li>
+                ))}
+            </ul>
+        </div>
+    )
 }
 
 export default Blogs;

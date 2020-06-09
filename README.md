@@ -3,7 +3,7 @@
 
 App with a connection to [Google Blogger API](https://developers.google.com/blogger) with [React](https://reactjs.org/).
 
-## Login
+## Welcome
 Username: `bloggerspa19@gmail.com`  
 Password: `A3DG?6~7`
 
@@ -42,6 +42,9 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 * [React Hooks CRUD example with Axios and Web API](https://bezkoder.com/react-hooks-crud-axios-api/)
 * [How to fetch data with React Hooks?](https://www.robinwieruch.de/react-hooks-fetch-data)
 * [Integrating Google Sign-In into your web app](https://developers.google.com/identity/sign-in/web/sign-in)
-* [React example for Google Login using gapi-script npm package](https://github.com/LucasAndrad/gapi-script-live-example)
+* [React example for Google Welcome using gapi-script npm package](https://github.com/LucasAndrad/gapi-script-live-example)
 * [React router v4 redirect when no match](https://stackoverflow.com/questions/50341108/react-router-v4-redirect-when-no-match)
 * [React Router: Declarative Routing for React.js](https://reacttraining.com/react-router/web/guides/quick-start)
+* [Protected Routes in React using React Router](https://www.youtube.com/watch?v=Y0-qdp-XBJg)
+* [Hooked with React - Using react router in our react application to route a dynamic page](https://learnwithparam.com/blog/book-details-page-using-react-router/)
+* [p71pr7jn50](https://codesandbox.io/s/p71pr7jn50)

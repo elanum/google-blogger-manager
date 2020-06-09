@@ -1,18 +1,39 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter} from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import {AuthProvider} from "./components/GoogleAuth";
 
-import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
-  document.getElementById('root')
-);
+import ProtectedRoute from "./components/ProtectedRoute";
+import Sidenav from "./components/Sidenav";
+import Blogs from "./components/Blogs";
+import Welcome from "./components/Welcome";
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
+import './styles.scss';
+
+
+const App = () => (
+    <div>
+        <Router>
+            <AuthProvider>
+                <header>
+                    <Sidenav/>
+                </header>
+                <main>
+                    <Switch>
+                        <ProtectedRoute path="blogs/:id" component={Blogs} />
+                        <ProtectedRoute exact path="/blogs" component={Blogs} />
+                        <Route exact path="/" component={Welcome}/>
+                        <Route component={() => "404 NOT FOUND"}/>
+                    </Switch>
+                </main>
+            </AuthProvider>
+        </Router>
+    </div>
+)
+
+
+ReactDOM.render(<App/>, document.getElementById('root'));
+
 serviceWorker.unregister();
