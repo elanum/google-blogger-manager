@@ -37,6 +37,8 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 ## Sources
 * [React Documentation](https://reactjs.org/docs/getting-started.html)
 * [Google Blogger API Documentation](https://developers.google.com/blogger)
+* [Materialize Documentation](https://materializecss.com/)
+* [react-materialize](https://github.com/react-materialize/react-materialize)
 * [Build a CRUD App in React with Hooks](https://www.taniarascia.com/crud-app-in-react-with-hooks/)
 * [React.js CRUD example to consume Web API](https://bezkoder.com/react-crud-web-api/)
 * [React Hooks CRUD example with Axios and Web API](https://bezkoder.com/react-hooks-crud-axios-api/)
@@ -48,3 +50,5 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 * [Protected Routes in React using React Router](https://www.youtube.com/watch?v=Y0-qdp-XBJg)
 * [Hooked with React - Using react router in our react application to route a dynamic page](https://learnwithparam.com/blog/book-details-page-using-react-router/)
 * [p71pr7jn50](https://codesandbox.io/s/p71pr7jn50)
+* [Display A 'Loading' Indicator In React During Ajax Requests ](https://blog.stvmlbrn.com/2017/10/14/display-loading-indicator-in-react-during-ajax-requests.html)
+* [How to parse html to React component?](https://stackoverflow.com/questions/44643424/how-to-parse-html-to-react-component)

@@ -3,19 +3,18 @@ import {Link} from "react-router-dom";
 import {AuthConsumer} from "./GoogleAuth";
 import Requests from "./Requests";
 
-const UserCard = () => {
+const SidenavUser = () => {
     const [blogs, setBlogs] = useState([]);
 
-    useEffect(() => {
-        retrieveBlogs();
-    }, []);
-
-    const retrieveBlogs = () => {
+    const getAllBlogs = () => {
         Requests.getAllBlogs(results => {
             setBlogs(results);
-            console.log(results);
         })
     }
+
+    useEffect(() => {
+        getAllBlogs();
+    }, []);
 
     return (
         <AuthConsumer>
@@ -29,25 +28,27 @@ const UserCard = () => {
                             <span className="white-text email">{user.email}</span>
                         </div>
                     </li>
+                    <li><Link to={"/"}><i className="material-icons">home</i>Home</Link></li>
+                    <li><div className="divider" /></li>
+                    {// eslint-disable-next-line
+                    }<li><a className="subheader">Blogs</a></li>
                     {blogs &&
                     blogs.map((blog) => (
-                        <div key={blog.id}>
-                            {// eslint-disable-next-line
-                            }<li><a className="subheader">{blog.name}</a></li>
-                            <li><Link to={"/blogs"}><i className="material-icons">library_books</i>Übersicht</Link></li>
-                            <li><div className="divider" /></li>
-                        </div>
+                        // eslint-disable-next-line
+                        <li key={blog.id}><Link to={`/blogs/${blog.id}`} className="sidenav-close">{blog.name}</Link></li>
                     ))}
+                    <li><div className="divider" /></li>
                     <li>
                         {// eslint-disable-next-line
-                        }<a className="waves-effect" onClick={logout}>
+                        }<a className="waves-effect sidenav-close" onClick={logout}>
                         <i className="material-icons">input</i>Logout
                     </a>
                     </li>
+
                 </div>
             )}
         </AuthConsumer>
     )
 }
 
-export default UserCard;
+export default SidenavUser;

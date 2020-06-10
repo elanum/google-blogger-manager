@@ -1,8 +1,9 @@
 import React, {Component} from "react";
 import {AuthConsumer} from "./GoogleAuth";
 import M from 'materialize-css'
-import UserCard from "./UserCard";
+import SidenavUser from "./SidenavUser";
 
+// no usage of react-materialize cause of sync problems with GoogleAuth
 class Sidenav extends Component {
 
     componentDidMount() {
@@ -17,22 +18,30 @@ class Sidenav extends Component {
             <AuthConsumer>
                 {({isSignedIn, login}) => (
                     <div>
-                        <nav className="hide-on-large-only">
-                            <div className="nav-wrapper">
-                                {
-                                    // eslint-disable-next-line
-                                }<a data-target="nav-mobile"
-                                    className="top-nav sidenav-trigger full"><i
-                                className="material-icons">menu</i></a>
-                            </div>
-                        </nav>
-                        <ul id="nav-mobile" className="sidenav sidenav-fixed" ref={(sidenav) => {this.sidenav = sidenav}}>
+                        <div className="navbar-fixed">
+                            <nav className="hide-on-large-only">
+                                <div className="nav-wrapper">
+                                    {
+                                        // eslint-disable-next-line
+                                    }<a data-target="nav-mobile"
+                                        className="top-nav sidenav-trigger full"><i
+                                    className="material-icons">menu</i></a>
+                                </div>
+                            </nav>
+                        </div>
+                        <ul id="nav-mobile" className="sidenav sidenav-fixed" ref={(sidenav) => {
+                            this.sidenav = sidenav
+                        }}>
+
                             {!isSignedIn ? (
                                 // eslint-disable-next-line
-                                <li><a className="waves-effect" onClick={login}><i className="material-icons">input</i>Login</a>
+                                <li>
+                                    <a className="waves-effect sidenav-close" onClick={login}>
+                                        <i className="material-icons">input</i>Login
+                                    </a>
                                 </li>
                             ) : (
-                                <UserCard />
+                                <SidenavUser/>
                             )}
                         </ul>
                     </div>

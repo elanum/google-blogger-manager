@@ -7,11 +7,11 @@ import * as serviceWorker from './serviceWorker';
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import Sidenav from "./components/Sidenav";
-import Blogs from "./components/Blogs";
 import Welcome from "./components/Welcome";
+import BlogView from "./components/BlogView";
+import PostView from "./components/PostView";
 
 import './styles.scss';
-
 
 const App = () => (
     <div>
@@ -22,8 +22,8 @@ const App = () => (
                 </header>
                 <main>
                     <Switch>
-                        <ProtectedRoute path="blogs/:id" component={Blogs} />
-                        <ProtectedRoute exact path="/blogs" component={Blogs} />
+                        <ProtectedRoute exact path="/blogs/:blogId" component={BlogView} />
+                        <ProtectedRoute exact path="/blogs/:blogId/posts/:postId" component={PostView} />
                         <Route exact path="/" component={Welcome}/>
                         <Route component={() => "404 NOT FOUND"}/>
                     </Switch>
