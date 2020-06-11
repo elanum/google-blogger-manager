@@ -3,7 +3,6 @@ import {AuthConsumer} from "./GoogleAuth";
 import M from 'materialize-css'
 import SidenavUser from "./SidenavUser";
 
-// no usage of react-materialize cause of sync problems with GoogleAuth
 class Sidenav extends Component {
 
     componentDidMount() {
@@ -34,12 +33,20 @@ class Sidenav extends Component {
                         }}>
 
                             {!isSignedIn ? (
-                                // eslint-disable-next-line
-                                <li>
-                                    <a className="waves-effect sidenav-close" onClick={login}>
-                                        <i className="material-icons">input</i>Login
-                                    </a>
-                                </li>
+                                <div>
+                                    <li>
+                                        <div className="user-view deep-orange">
+                                            <span className="white-text">AWFT</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        {
+                                            // eslint-disable-next-line
+                                        }<a className="waves-effect sidenav-close" onClick={login}>
+                                            <i className="material-icons">input</i>Login
+                                        </a>
+                                    </li>
+                                </div>
                             ) : (
                                 <SidenavUser/>
                             )}

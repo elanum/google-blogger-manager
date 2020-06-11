@@ -66,10 +66,40 @@ const getComments = (bid, pid, callback) => {
     })
 }
 
+// Update Post
+const updatePost = (bid, pid, title, content, callback) => {
+    let request = gapi.client.request({
+        "method": "PATCH",
+        "path": "blogger/v3/blogs/" + bid + "/posts/" + pid,
+        "headers": {
+            "content-type": "application/json"
+        },
+        "body": {
+            "title": title,
+            "content": content
+        }
+    });
+    request.execute((result) => {
+        callback(result);
+    });
+}
+
+// Delete Post
+const deletePost = (bid, pid, callback) => {
+    let request = gapi.client.request({
+        "method": "DELETE",
+        "path": "blogger/v3/blogs/" + bid + "/posts/" + pid
+    });
+    request.execute((result) => {
+        callback(result);
+    })
+}
+
 export default {
     getAllBlogs,
     getBlog,
     getBlogPosts,
     getPost,
-    getComments
+    getComments,
+    updatePost
 }

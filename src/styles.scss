@@ -1,5 +1,6 @@
 /* Color Theme */
 @import "node_modules/materialize-css/sass/components/color-variables";
+
 $primary-color: color("deep-orange", "base") !default;
 $secondary-color: color("deep-orange", "lighten-1") !default;
 
@@ -7,7 +8,7 @@ $secondary-color: color("deep-orange", "lighten-1") !default;
 @import 'node_modules/materialize-css/sass/materialize';
 
 /* Custom CSS */
-header, main, footer{
+header, main, footer {
   padding-left: 300px;
   @media only screen and (max-width: 992px) {
     padding-left: 0;
@@ -28,10 +29,6 @@ header, main, footer{
   height: 100vh;
 }
 
-.set-padding {
-  padding: 24px;
-}
-
-#sidenav-overlay {
-  will-change: opacity;
+.comment-image {
+  width: 200px;
 }

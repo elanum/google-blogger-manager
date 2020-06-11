@@ -2,16 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import {AuthProvider} from "./components/GoogleAuth";
-
 import * as serviceWorker from './serviceWorker';
+
+import './styles.scss';
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import Sidenav from "./components/Sidenav";
 import Welcome from "./components/Welcome";
 import BlogView from "./components/BlogView";
 import PostView from "./components/PostView";
-
-import './styles.scss';
+import PostEdit from "./components/PostEdit";
 
 const App = () => (
     <div>
@@ -24,6 +24,7 @@ const App = () => (
                     <Switch>
                         <ProtectedRoute exact path="/blogs/:blogId" component={BlogView} />
                         <ProtectedRoute exact path="/blogs/:blogId/posts/:postId" component={PostView} />
+                        <ProtectedRoute exact path="/blogs/:blogId/posts/:postId/edit" component={PostEdit} />
                         <Route exact path="/" component={Welcome}/>
                         <Route component={() => "404 NOT FOUND"}/>
                     </Switch>
