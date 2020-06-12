@@ -28,19 +28,19 @@ const SidenavUser = () => {
                             <span className="white-text email">{user.email}</span>
                         </div>
                     </li>
-                    <li><Link to={"/"} className="waves-effect sidenav-close"><i className="material-icons">home</i>Home</Link></li>
+                    <li><Link to={"/"} className="sidenav-close"><i className="material-icons">home</i>Home</Link></li>
                     <li><div className="divider" /></li>
                     {// eslint-disable-next-line
                     }<li><a className="subheader">Blogs</a></li>
                     {blogs &&
                     blogs.map((blog) => (
                         // eslint-disable-next-line
-                        <li key={blog.id}><Link to={`/blogs/${blog.id}`} className="sidenav-close waves-effect">{blog.name}</Link></li>
+                        <li key={blog.id}><Link to={`/blogs/${blog.id}`} className="sidenav-close">{blog.name}</Link></li>
                     ))}
                     <li><div className="divider" /></li>
                     <li>
                         {// eslint-disable-next-line
-                        }<a className="waves-effect sidenav-close" onClick={logout}>
+                        }<a className="sidenav-close pointer" onClick={logout}>
                         <i className="material-icons">input</i>Logout
                     </a>
                     </li>

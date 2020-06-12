@@ -1,6 +1,6 @@
 import {gapi} from "gapi-script";
 
-const items = new Map();
+//const items = new Map();
 
 // All Blogs from logged in User
 const getAllBlogs = callback => {
@@ -67,7 +67,7 @@ const getComments = (bid, pid, callback) => {
 }
 
 // Update Post
-const updatePost = (bid, pid, title, content, callback) => {
+const updatePost = (bid, pid, title, content, labels, callback) => {
     let request = gapi.client.request({
         "method": "PATCH",
         "path": "blogger/v3/blogs/" + bid + "/posts/" + pid,
@@ -76,7 +76,8 @@ const updatePost = (bid, pid, title, content, callback) => {
         },
         "body": {
             "title": title,
-            "content": content
+            "content": content,
+            "labels": labels
         }
     });
     request.execute((result) => {
@@ -101,5 +102,6 @@ export default {
     getBlogPosts,
     getPost,
     getComments,
-    updatePost
+    updatePost,
+    deletePost
 }

@@ -42,7 +42,7 @@ class Sidenav extends Component {
                                     <li>
                                         {
                                             // eslint-disable-next-line
-                                        }<a className="waves-effect sidenav-close" onClick={login}>
+                                        }<a className="sidenav-close pointer" onClick={login}>
                                             <i className="material-icons">input</i>Login
                                         </a>
                                     </li>

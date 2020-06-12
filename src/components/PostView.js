@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from "react";
 import Requests from "./Requests";
-import {CardPanel, Col, Icon, ProgressBar, Row, Toast} from "react-materialize";
+import {Button, CardPanel, Chip, Col, Icon, Modal, ProgressBar, Row} from "react-materialize";
 import dateFormat from "dateformat";
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import M from 'materialize-css';
-
 
 const PostView = props => {
     const dateMask = "dd.mm.yyyy, HH:MM:ss";
 
+    const [deleted, setDeleted] = useState({value: false, blogId: '0'});
     const [post, setPost] = useState({loading: true});
     const [title, setTitle] = useState(document.title);
     const [comments, setComments] = useState([]);
@@ -27,19 +27,30 @@ const PostView = props => {
         })
     }
 
+    const deletePost = (bid, pid) => {
+        Requests.deletePost(bid, pid, () => {
+            setDeleted({
+                value: true,
+                blogId: bid
+            });
+        })
+    }
+
     useEffect(() => {
         if (props.location.success)
             M.toast({
                 html: 'Post updated!'
             })
-    }, [])
+    }, [props.location.success])
+
+    useEffect(() => {
+        getPost(props.match.params.blogId, props.match.params.postId);
+        getComments(props.match.params.blogId, props.match.params.postId);
+    }, [props.match.params.blogId, props.match.params.postId])
 
     useEffect(() => {
         document.title = title;
-        getPost(props.match.params.blogId, props.match.params.postId);
-        getComments(props.match.params.blogId, props.match.params.postId);
-
-    }, [title, props.match.params.blogId, props.match.params.postId])
+    }, [title])
 
 
     const addTargetBlank = content => {
@@ -47,13 +58,11 @@ const PostView = props => {
         return content;
     }
 
-    const postUpdated = () => {
-        M.toast({html: 'Post updated!'})
-    }
-
     return (
         <div className="container">
-            {!post.loading ? (
+            {deleted.value ? (
+                <Redirect to={`/blogs/${deleted.blogId}`}/>
+            ) : !post.loading ? (
                 <div>
                     <div>
                         <h4>{post.title}</h4>
@@ -71,10 +80,33 @@ const PostView = props => {
                         <p className="valign-wrapper">
                             <Icon>comment</Icon>&nbsp;{post.replies.totalItems}
                         </p>
+                        <div>
+                            {post.labels && (
+                                post.labels.map((label) => (
+                                    <Chip key={label}>{label}</Chip>
+                                ))
+                            )}
+                        </div>
                         <Link to={{
                             pathname: `/blogs/${post.blog.id}/posts/${post.id}/edit`,
-                            post: post
-                        }} className="btn">Edit</Link>
+                            post: post,
+                            labels: props.location.labels
+                        }} className="btn">Edit<Icon right>edit</Icon></Link>
+                        <Modal
+                            actions={[
+                                <Button flat modal="close" node="button" waves="light" className="red white-text"
+                                        onClick={() => {
+                                            deletePost(post.blog.id, post.id)
+                                        }}>Delete</Button>,
+                                <Button flat modal="close" node="button" waves="light">Cancel</Button>
+                            ]}
+                            header="Confirm Deletion"
+                            trigger={
+                                <Button node="button">Delete<Icon right>delete</Icon></Button>
+                            }
+                        >
+                            <p>Do you really want to delete "<code>{post.title}</code>"? This cannot be undone!</p>
+                        </Modal>
                     </div>
                     <Row>
                         <Col s={12}>
