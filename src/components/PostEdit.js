@@ -1,22 +1,23 @@
 import React, {useEffect, useState} from "react";
 import Requests from "./Requests";
 import {Button, Chip, Col, Icon, Row, Textarea, TextInput} from "react-materialize";
-import {Redirect} from "react-router-dom";
+import {Redirect, useLocation} from "react-router-dom";
 
-const PostEdit = props => {
-    const [post] = useState(props.location.state.post);
+const PostEdit = () => {
+    const {state} = useLocation();
+    const [post] = useState(state.post);
     const [title] = useState(document.title);
     const [success, setSuccess] = useState(false);
     const [update, setUpdate] = useState({...post});
-    const [autoCompleteData] = useState(props.location.state.labels);
+    const [autoCompleteData] = useState(state.blog.labels);
     const [chipData, setChipData] = useState([]);
 
     const savePost = event => {
         event.preventDefault();
         if (update.title && update.content) {
-            Requests.updatePost(post.blog.id, post.id, update.title, update.content, update.labels, () => {
-                setSuccess(true);
-            });
+            Requests.updatePost(post.blog.id, post.id, update.title, update.content, update.labels).then(() => {
+                setSuccess(true)
+            })
         }
     }
 

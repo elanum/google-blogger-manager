@@ -13,7 +13,7 @@ import BlogView from "./components/BlogView";
 import PostView from "./components/PostView";
 import PostEdit from "./components/PostEdit";
 import PostCreate from "./components/PostCreate";
-
+import ErrorView from "./components/ErrorView";
 
 const App = () => (
     <div>
@@ -28,8 +28,9 @@ const App = () => (
                         <ProtectedRoute exact path="/blogs/:blogId/posts/new" component={PostCreate} />
                         <ProtectedRoute exact path="/blogs/:blogId/posts/:postId" component={PostView} />
                         <ProtectedRoute exact path="/blogs/:blogId/posts/:postId/edit" component={PostEdit} />
+                        <ProtectedRoute exact path="/error" component={ErrorView}/>
                         <Route exact path="/" component={Welcome}/>
-                        <Route component={() => "404 NOT FOUND"}/>
+                        <ProtectedRoute component={ErrorView} />
                     </Switch>
                 </main>
             </AuthProvider>

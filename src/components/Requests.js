@@ -1,125 +1,144 @@
 import {gapi} from "gapi-script";
 
-//const items = new Map();
-
-// All Blogs from logged in User
-const getAllBlogs = callback => {
-    let request = gapi.client.request({
-        "method": "GET",
-        "path": "blogger/v3/users/self/blogs"
-    })
-    request.execute((result) => {
-        callback(result.items);
-    });
-}
-
-
-
-// Get Posts from Blog by Blog-ID
-const getBlogPosts = (id, callback) => {
-    let request = gapi.client.request({
-        "method": "GET",
-        "path": "blogger/v3/blogs/" + id + "/posts",
-        "params": {
-            "fetchBody": false,
-            "fetchImages": true
-        }
-    });
-    request.execute((result) => {
-        callback(result.items);
+const getAllBlogs = () => {
+    return new Promise((resolve, reject) => {
+        gapi.client.blogger.blogs.listByUser({
+            "userId": "self"
+        }).then(response => {
+            resolve(response.result.items);
+        }, function (err) {
+            reject(err.result.error);
+            console.error("getAllBlogs", err.result.error);
+        })
     })
 }
 
-// Get Post from Blog by Blog-ID and Post-ID
-/*const getPost = (bid, pid, callback) => {
-    let request = gapi.client.request({
-        "method": "GET",
-        "path": "blogger/v3/blogs/" + bid + "/posts/" + pid,
-        "params": {
-            "fetchImages": true,
-            "fetchBody": true
-        }
-
-    });
-    request.execute((result) => {
-        callback(result);
-    })
-}*/
-
-// Get Comments of a Post from Blog by Blog-ID and Post-ID
-const getComments = (bid, pid, callback) => {
-    let request = gapi.client.request({
-        "method": "GET",
-        "path": "blogger/v3/blogs/" + bid + "/posts/" + pid + "/comments"
-    });
-    request.execute((result) => {
-        callback(result.items);
+const getBlog = id => {
+    return new Promise((resolve, reject) => {
+        gapi.client.blogger.blogs.get({
+            "blogId": id
+        }).then(response => {
+            resolve(response.result);
+        }, function (err) {
+            reject(err.result.error);
+            console.error("getBlog", err.result.error);
+        })
     })
 }
 
-// Update Post
-const updatePost = (bid, pid, title, content, labels, callback) => {
-    let request = gapi.client.request({
-        "method": "PATCH",
-        "path": "blogger/v3/blogs/" + bid + "/posts/" + pid,
-        "headers": {
-            "content-type": "application/json"
-        },
-        "body": {
-            "title": title,
-            "content": content,
-            "labels": labels
-        }
-    });
-    request.execute((result) => {
-        callback(result);
-    });
-}
-
-// Delete Post
-const deletePost = (bid, pid, callback) => {
-    let request = gapi.client.request({
-        "method": "DELETE",
-        "path": "blogger/v3/blogs/" + bid + "/posts/" + pid
-    });
-    request.execute((result) => {
-        callback(result);
+const getBlogPosts = id => {
+    return new Promise((resolve, reject) => {
+        gapi.client.blogger.posts.list({
+            "blogId": id
+        }).then(response => {
+            resolve(response.result.items);
+        }, function (err) {
+            reject(err.result.error);
+            console.error("getBlogPosts", err.result.error);
+        })
     })
 }
 
-// Delete Comment
-const deleteComment = (bid, pid, cid, callback) => {
-    let request = gapi.client.request({
-        "method": "DELETE",
-        "path": "blogger/v3/blogs/" + bid + "/posts/" + pid + "/comments/" + cid
-    });
-    request.execute((result) => {
-        callback(result);
+const getPost = (bid, pid) => {
+    return new Promise((resolve, reject) => {
+        gapi.client.blogger.posts.get({
+            "blogId": bid,
+            "postId": pid
+        }).then(response => {
+            resolve(response.result)
+        }, function (err) {
+            reject(err.result.error);
+            console.error("getPost", err.result.error);
+        })
     })
 }
 
-// Create Post
-const createPost = (id, title, content, labels, callback) => {
-    let request = gapi.client.request({
-        "method": "POST",
-        "path": "blogger/v3/blogs/" + id + "/posts",
-        "headers": {
-            "content-type": "application/json"
-        },
-        "body": {
-            "title": title,
-            "content": content,
-            "labels": labels
-        }
-    });
-    request.execute((result) => {
-        callback(result)
+const getComments = (bid, pid) => {
+    return new Promise((resolve, reject) => {
+        gapi.client.blogger.comments.list({
+            "blogId": bid,
+            "postId": pid,
+        }).then(response => {
+            resolve(response.result.items);
+        }, function (err) {
+            reject(err.result.error);
+            console.error("getComments", err.result.error);
+        })
+    })
+}
+
+const updatePost = (bid, pid, title, content, labels) => {
+    return new Promise((resolve, reject) => {
+        gapi.client.blogger.posts.update({
+            "blogId": bid,
+            "postId": pid,
+            "resource": {
+                "title": title,
+                "content": content,
+                "labels": labels
+            }
+        }).then(response => {
+            resolve(response.result);
+        }, function (err) {
+            reject(err.result.error);
+            console.error("updatePost", err.result.error);
+        })
+    })
+}
+
+const deletePost = (bid, pid) => {
+    return new Promise((resolve, reject) => {
+        gapi.client.blogger.posts.delete({
+            "blogId": bid,
+            "postId": pid
+        }).then(response => {
+            resolve(response.result);
+        }, function (err) {
+            reject(err.result.error);
+            console.error("deletePost", err.result.error);
+        })
+    })
+}
+
+const deleteComment = (bid, pid, cid) => {
+    return new Promise((resolve, reject) => {
+        gapi.client.blogger.comments.delete({
+            "blogId": bid,
+            "postId": pid,
+            "commentId": cid
+        }).then(response => {
+            console.log(response);
+            resolve(response.result);
+        }, function (err) {
+            reject(err.result.error);
+            console.error("deleteComment", err.result.error);
+        })
+    })
+}
+
+const createPost = (id, title, content, labels) => {
+    return new Promise((resolve, reject) => {
+        gapi.client.blogger.posts.insert({
+            "blogId": id,
+            "resource": {
+                "title": title,
+                "content": content,
+                "labels": labels
+            }
+        }).then(response => {
+            resolve(response.result);
+        }, function (err) {
+            reject(err.result.error);
+            console.error("createPost", err.result.error);
+        })
     })
 }
 
 export default {
     getAllBlogs,
+    getBlog,
     getBlogPosts,
+    getPost,
     getComments,
     updatePost,
     deletePost,

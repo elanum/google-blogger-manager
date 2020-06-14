@@ -52,3 +52,5 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 * [p71pr7jn50](https://codesandbox.io/s/p71pr7jn50)
 * [Display A 'Loading' Indicator In React During Ajax Requests ](https://blog.stvmlbrn.com/2017/10/14/display-loading-indicator-in-react-during-ajax-requests.html)
 * [How to parse html to React component?](https://stackoverflow.com/questions/44643424/how-to-parse-html-to-react-component)
+* [google-api-javascript-client](https://github.com/google/google-api-javascript-client)
+* [How to fix missing dependency warning when using useEffect React Hook?](https://stackoverflow.com/questions/55840294/how-to-fix-missing-dependency-warning-when-using-useeffect-react-hook)

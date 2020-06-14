@@ -7,9 +7,9 @@ const SidenavUser = () => {
     const [blogs, setBlogs] = useState([]);
 
     const getAllBlogs = () => {
-        Requests.getAllBlogs(results => {
-            setBlogs(results);
-        })
+        Requests.getAllBlogs().then(result => {
+            setBlogs(result);
+        });
     }
 
     useEffect(() => {
@@ -36,10 +36,7 @@ const SidenavUser = () => {
                     blogs.map((blog) => (
                         // eslint-disable-next-line
                         <li key={blog.id}><Link to={{
-                            pathname:`/blogs/${blog.id}`,
-                            state: {
-                                blog: blog
-                            }
+                            pathname: `/blogs/${blog.id}`
                         }} className="sidenav-close">{blog.name}</Link></li>
                     ))}
                     <li><div className="divider" /></li>

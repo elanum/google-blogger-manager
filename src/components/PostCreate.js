@@ -1,19 +1,26 @@
 import React, {useEffect, useState} from "react";
-import {Redirect} from "react-router-dom";
+import {Redirect, useLocation} from "react-router-dom";
 import Requests from "./Requests";
 import {Button, Chip, Col, Icon, Row, Textarea, TextInput} from "react-materialize";
 
+/**
+ * Component to create a new post in the current blog
+ *
+ */
+
 const PostCreate = props => {
+    const {state} = useLocation();
+
     const [title] = useState(document.title);
     const [success, setSuccess] = useState(false);
     const [createdPost, setCreatedPost] = useState({});
-    const [autoCompleteData] = useState(props.location.state.labels);
+    const [autoCompleteData] = useState(state.blog.labels);
     const [chipData, setChipData] = useState([]);
 
     const savePost = event => {
         event.preventDefault();
         if (createdPost.title && createdPost.content) {
-            Requests.createPost(props.match.params.blogId, createdPost.title, createdPost.content, createdPost.labels, (result) => {
+            Requests.createPost(props.match.blogId, createdPost.title, createdPost.content, createdPost.labels).then(result => {
                 setCreatedPost(result);
                 setSuccess(true);
             })
@@ -48,6 +55,7 @@ const PostCreate = props => {
     return (
         <div className="container">
             <div>
+                {console.log(autoCompleteData)}
                 <h4>New Post</h4>
                 <form onSubmit={savePost}>
                     <Row>
