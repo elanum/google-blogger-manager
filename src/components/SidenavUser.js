@@ -35,7 +35,12 @@ const SidenavUser = () => {
                     {blogs &&
                     blogs.map((blog) => (
                         // eslint-disable-next-line
-                        <li key={blog.id}><Link to={`/blogs/${blog.id}`} className="sidenav-close">{blog.name}</Link></li>
+                        <li key={blog.id}><Link to={{
+                            pathname:`/blogs/${blog.id}`,
+                            state: {
+                                blog: blog
+                            }
+                        }} className="sidenav-close">{blog.name}</Link></li>
                     ))}
                     <li><div className="divider" /></li>
                     <li>

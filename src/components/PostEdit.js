@@ -4,42 +4,20 @@ import {Button, Chip, Col, Icon, Row, Textarea, TextInput} from "react-materiali
 import {Redirect} from "react-router-dom";
 
 const PostEdit = props => {
-/*    const post = props.location.post;
-    document.title = post.title + " - Edit";
-    console.log("initPostValue", props.location.post.labels)
-
-    // Initialize Pre-Chip Data
-    let initialChipData = [];
-    post.labels.forEach(e => {
-        initialChipData.push({
-            tag: e
-        });
-    })*/
-    /*
-    data: [
-        {
-            tag: 'label'
-        }
-    ]
-     */
-
-    // Initialize Chip Auto Complete Data from inherited variable
-    /*let initAutoCompleteData = {};
-    props.location.labels.forEach((e) => {
-        return initAutoCompleteData[e] = null;
-    })*/
-
-    const [post] = useState(props.location.post);
+    const [post] = useState(props.location.state.post);
     const [title] = useState(document.title);
     const [success, setSuccess] = useState(false);
     const [update, setUpdate] = useState({...post});
-    const [autoCompleteData] = useState(props.location.labels);
+    const [autoCompleteData] = useState(props.location.state.labels);
     const [chipData, setChipData] = useState([]);
 
-    const savePost = () => {
-        Requests.updatePost(post.blog.id, post.id, update.title, update.content, update.labels, () => {
-            setSuccess(true);
-        });
+    const savePost = event => {
+        event.preventDefault();
+        if (update.title && update.content) {
+            Requests.updatePost(post.blog.id, post.id, update.title, update.content, update.labels, () => {
+                setSuccess(true);
+            });
+        }
     }
 
     const handleChipAdd = (data, object) => {
@@ -74,15 +52,19 @@ const PostEdit = props => {
     }
 
     useEffect(() => {
+        document.title = "Edit: " + post.title;
         initDefaultChips();
-    }, [post])
+    }, [title, post]) // eslint-disable-line
 
     return (
         <div className="container">
             <div>
                 <h4>{post.title}</h4>
+                <form onSubmit={savePost}>
                 <Row>
                     <TextInput
+                        required
+                        validate
                         s={12}
                         id="post-title"
                         label="Title"
@@ -97,7 +79,7 @@ const PostEdit = props => {
                         <label>Labels</label>
                         <Chip
                             close={false}
-                            closeIcon={<Icon className="close">close</Icon>}
+                            closeIcon={<Icon>close</Icon>}
                             options={{
                                 data: chipData,
                                 autocompleteOptions: {
@@ -107,8 +89,6 @@ const PostEdit = props => {
                                     handleChipAdd(e[0].M_Chips.chipsData, chip)
                                 },
                                 onChipDelete: (e, chip) => {
-                                    /*console.log("e", e);
-                                    console.log("chip",chip);*/
                                     handleChipDelete(chip);
                                 }
                             }}
@@ -118,6 +98,8 @@ const PostEdit = props => {
                 </Row>
                 <Row>
                     <Textarea
+                        required
+                        validate
                         s={12}
                         id="post-content"
                         label="Content"
@@ -129,17 +111,20 @@ const PostEdit = props => {
                 <Row>
                     <Button
                         node="button"
-                        waves="light"
-                        onClick={savePost}
+                        type="submit"
                     >
                         Submit<Icon right>send</Icon>
                     </Button>
                 </Row>
+                </form>
             </div>
             {success && (
                 <Redirect to={{
                     pathname: `/blogs/${post.blog.id}/posts/${post.id}`,
-                    success: true
+                    state: {
+                        post: update,
+                        success: 'Post updated!'
+                    }
                 }}/>
             )}
         </div>

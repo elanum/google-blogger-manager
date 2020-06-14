@@ -12,6 +12,8 @@ import Welcome from "./components/Welcome";
 import BlogView from "./components/BlogView";
 import PostView from "./components/PostView";
 import PostEdit from "./components/PostEdit";
+import PostCreate from "./components/PostCreate";
+
 
 const App = () => (
     <div>
@@ -23,6 +25,7 @@ const App = () => (
                 <main>
                     <Switch>
                         <ProtectedRoute exact path="/blogs/:blogId" component={BlogView} />
+                        <ProtectedRoute exact path="/blogs/:blogId/posts/new" component={PostCreate} />
                         <ProtectedRoute exact path="/blogs/:blogId/posts/:postId" component={PostView} />
                         <ProtectedRoute exact path="/blogs/:blogId/posts/:postId/edit" component={PostEdit} />
                         <Route exact path="/" component={Welcome}/>

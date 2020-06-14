@@ -13,16 +13,7 @@ const getAllBlogs = callback => {
     });
 }
 
-// Get Blog by Blog-ID
-const getBlog = (id, callback) => {
-    let request = gapi.client.request({
-        "method": "GET",
-        "path": "blogger/v3/blogs/" + id
-    });
-    request.execute((result) => {
-        callback(result);
-    })
-}
+
 
 // Get Posts from Blog by Blog-ID
 const getBlogPosts = (id, callback) => {
@@ -40,7 +31,7 @@ const getBlogPosts = (id, callback) => {
 }
 
 // Get Post from Blog by Blog-ID and Post-ID
-const getPost = (bid, pid, callback) => {
+/*const getPost = (bid, pid, callback) => {
     let request = gapi.client.request({
         "method": "GET",
         "path": "blogger/v3/blogs/" + bid + "/posts/" + pid,
@@ -53,7 +44,7 @@ const getPost = (bid, pid, callback) => {
     request.execute((result) => {
         callback(result);
     })
-}
+}*/
 
 // Get Comments of a Post from Blog by Blog-ID and Post-ID
 const getComments = (bid, pid, callback) => {
@@ -96,12 +87,42 @@ const deletePost = (bid, pid, callback) => {
     })
 }
 
+// Delete Comment
+const deleteComment = (bid, pid, cid, callback) => {
+    let request = gapi.client.request({
+        "method": "DELETE",
+        "path": "blogger/v3/blogs/" + bid + "/posts/" + pid + "/comments/" + cid
+    });
+    request.execute((result) => {
+        callback(result);
+    })
+}
+
+// Create Post
+const createPost = (id, title, content, labels, callback) => {
+    let request = gapi.client.request({
+        "method": "POST",
+        "path": "blogger/v3/blogs/" + id + "/posts",
+        "headers": {
+            "content-type": "application/json"
+        },
+        "body": {
+            "title": title,
+            "content": content,
+            "labels": labels
+        }
+    });
+    request.execute((result) => {
+        callback(result)
+    })
+}
+
 export default {
     getAllBlogs,
-    getBlog,
     getBlogPosts,
-    getPost,
     getComments,
     updatePost,
-    deletePost
+    deletePost,
+    deleteComment,
+    createPost
 }
