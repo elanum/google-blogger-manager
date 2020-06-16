@@ -7,6 +7,9 @@ $secondary-color: color("deep-orange", "lighten-1") !default;
 /* Materialize */
 @import 'node_modules/materialize-css/sass/materialize';
 
+/* Rect Draft WYSIWYG */
+@import "node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg";
+
 /* Custom CSS */
 header, main, footer {
   padding-left: 300px;
@@ -36,6 +39,7 @@ header, main, footer {
 .chip:focus {
   background-color: $secondary-color;
 }
+
 .chips.focus{
   border-bottom: 1px solid $primary-color;
   box-shadow: 0 1px 0 0 $secondary-color;

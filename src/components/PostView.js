@@ -178,9 +178,10 @@ const PostView = () => {
                                                 <Col s={12}>
                                                     <CardPanel>
                                                         <Row>
-                                                            <Col s={12} offset={!c.replies.length ? 's1' : ''}>
+                                                            <Col s={12}>
                                                                 {c.content}
-                                                                <a className="pointer" onClick={() => {
+                                                                {// eslint-disable-next-line
+                                                                }<a className="pointer" onClick={() => {
                                                                     deleteComment(c.blog.id, c.post.id, c.id)
                                                                 }}>
                                                                     <Icon>delete</Icon>
@@ -195,9 +196,10 @@ const PostView = () => {
                                                                         <div className="divider"/>
                                                                     </Row>
                                                                     <Row>
-                                                                        <Col s={12} offset={!r.replies.length ? 's1' : ''}>
+                                                                        <Col s={12} offset={'s1'}>
                                                                             {r.content}
-                                                                            <a className="pointer" onClick={() => {
+                                                                            {// eslint-disable-next-line
+                                                                            }<a className="pointer" onClick={() => {
                                                                                 deleteComment(r.blog.id, r.post.id, r.id)
                                                                             }}>
                                                                                 <Icon>delete</Icon>

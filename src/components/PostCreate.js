@@ -1,8 +1,10 @@
 import React, {useState} from "react";
 import {Redirect, useLocation, useParams} from "react-router-dom";
 import Requests from "./Requests";
-import {Button, Chip, Col, Icon, Row, Textarea, TextInput} from "react-materialize";
-
+import {Button, CardPanel, Chip, Col, Icon, Row, TextInput} from "react-materialize";
+import {Editor} from "react-draft-wysiwyg";
+import draftToHtml from "draftjs-to-html";
+import {convertToRaw, EditorState} from "draft-js";
 /**
  * Component to create a new post in the current blog
  *
@@ -17,6 +19,7 @@ const PostCreate = () => {
     const [createdPost, setCreatedPost] = useState({});
     const [blogLabels, setBlogLabels] = useState(state.blog.labels);
     const [chipData, setChipData] = useState([]);
+    const [editorState, setEditorState] = useState(EditorState.createEmpty())
 
     const savePost = event => {
         event.preventDefault();
@@ -58,67 +61,77 @@ const PostCreate = () => {
         setCreatedPost({...createdPost, [name]: value});
     }
 
+    const handleEditorState = e => {
+        setEditorState(e)
+        const html = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+        setCreatedPost({...createdPost, content: html});
+    }
+
     return error ?
         <Redirect to={{pathname: "/error", state: error}}/> :
         (
             <div className="container">
                 <div>
                     <h4>New Post</h4>
-                    <form onSubmit={savePost}>
-                        <Row>
-                            <TextInput
-                                required
-                                validate
-                                s={12}
-                                id="post-title"
-                                label="Title"
-                                onChange={handleInputChange}
-                                data-length={75}
-                                name="title"
+                    <Row>
+                        <TextInput
+                            s={12}
+                            id="post-title"
+                            label="Title"
+                            onChange={handleInputChange}
+                            data-length={75}
+                            name="title"
+                        />
+                    </Row>
+                    <Row>
+                        <Col s={12}>
+                            <label>Labels</label>
+                            <Chip
+                                close={false}
+                                closeIcon={<Icon>close</Icon>}
+                                options={{
+                                    data: chipData,
+                                    autocompleteOptions: {
+                                        data: blogLabels
+                                    },
+                                    onChipAdd: (e, chip) => {
+                                        handleChipAdd(e[0].M_Chips.chipsData, chip)
+                                    },
+                                    onChipDelete: (e, chip) => {
+                                        handleChipDelete(chip);
+                                    }
+                                }}
+                                name="labels"
                             />
-                        </Row>
-                        <Row>
-                            <Col s={12}>
-                                <label>Labels</label>
-                                <Chip
-                                    close={false}
-                                    closeIcon={<Icon>close</Icon>}
-                                    options={{
-                                        data: chipData,
-                                        autocompleteOptions: {
-                                            data: blogLabels
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col s={12}>
+                            <label>Content</label>
+                            <CardPanel>
+                                <Editor
+                                    editorState={editorState}
+                                    onEditorStateChange={handleEditorState}
+                                    toolbar={{
+                                        blockType: {
+                                            options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'Blockquote', 'Code']
                                         },
-                                        onChipAdd: (e, chip) => {
-                                            handleChipAdd(e[0].M_Chips.chipsData, chip)
-                                        },
-                                        onChipDelete: (e, chip) => {
-                                            handleChipDelete(chip);
+                                        image: {
+                                            uploadEnabled: false
                                         }
                                     }}
-                                    name="labels"
                                 />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Textarea
-                                required
-                                validate
-                                s={12}
-                                id="post-content"
-                                label="Content"
-                                onChange={handleInputChange}
-                                name="content"
-                            />
-                        </Row>
-                        <Row>
-                            <Button
-                                node="button"
-                                type="submit"
-                            >
-                                Submit<Icon right>send</Icon>
-                            </Button>
-                        </Row>
-                    </form>
+                            </CardPanel>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Button
+                            node="button"
+                            onClick={savePost}
+                        >
+                            Submit<Icon right>send</Icon>
+                        </Button>
+                    </Row>
                 </div>
                 {success && (
                     <Redirect to={{

@@ -60,3 +60,4 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 * [How to fix missing dependency warning when using useEffect React Hook?](https://stackoverflow.com/questions/55840294/how-to-fix-missing-dependency-warning-when-using-useeffect-react-hook)
 * [http:403 forbidden error when trying to load img src with google profile pic](https://stackoverflow.com/questions/40570117/http403-forbidden-error-when-trying-to-load-img-src-with-google-profile-pic)
 * [React Draft Wysiwyg](https://jpuri.github.io/react-draft-wysiwyg/#/)
+* [react-draft-wysiwyg: how to set default value](https://github.com/jpuri/react-draft-wysiwyg/issues/357)

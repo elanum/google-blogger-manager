@@ -1,7 +1,12 @@
 import React, {useEffect, useState} from "react";
 import Requests from "./Requests";
-import {Button, Chip, Col, Icon, Row, Textarea, TextInput} from "react-materialize";
+import {Button, CardPanel, Chip, Col, Icon, Row, TextInput} from "react-materialize";
 import {Redirect, useLocation} from "react-router-dom";
+import {Editor} from 'react-draft-wysiwyg';
+import {EditorState, ContentState, convertToRaw} from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
+
 
 const PostEdit = () => {
     const {state} = useLocation();
@@ -12,18 +17,23 @@ const PostEdit = () => {
     const [update, setUpdate] = useState({...post});
     const [blogLabels, setBlogLabels] = useState(state.blog.labels);
     const [chipData, setChipData] = useState([]);
+    const [editorState, setEditorState] = useState(EditorState.createWithContent(
+        ContentState.createFromBlockArray(
+            htmlToDraft(post.content)
+        )
+    ))
 
-    const savePost = event => {
-        event.preventDefault();
-        if (update.title && update.content) {
-            Requests.updatePost(post.blog.id, post.id, update.title, update.content, update.labels)
-                .then(() => {
-                    setSuccess(true)
-                })
-                .catch((err) => {
-                    setError(err);
-                })
-        }
+    const savePost = () => {
+        if (!post.title)
+            setUpdate({...update, title: 'New Post'})
+        Requests.updatePost(post.blog.id, post.id, update.title, update.content, update.labels)
+            .then(() => {
+                setSuccess(true)
+            })
+            .catch((err) => {
+                setError(err);
+            })
+
     }
 
     const handleChipAdd = (data, object) => {
@@ -52,17 +62,23 @@ const PostEdit = () => {
         setUpdate({...update, [name]: value});
     }
 
+    const handleEditorState = e => {
+        setEditorState(e)
+        const html = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+        setUpdate({...update, content: html});
+    }
+
     useEffect(() => {
         const setInitialChips = () => {
             const initChipData = []
-            post.labels.forEach(e => {
-                initChipData.push({
-                    tag: e
+            if (post.labels)
+                post.labels.forEach(e => {
+                    initChipData.push({
+                        tag: e
+                    })
                 })
-            })
             setChipData(initChipData);
         }
-
         setInitialChips()
     }, [post])
 
@@ -84,63 +100,66 @@ const PostEdit = () => {
                 <div className="container">
                     <div>
                         <h4>{post.title}</h4>
-                        <form onSubmit={savePost}>
-                            <Row>
-                                <TextInput
-                                    required
-                                    validate
-                                    s={12}
-                                    id="post-title"
-                                    label="Title"
-                                    value={update.title}
-                                    onChange={handleInputChange}
-                                    data-length={75}
-                                    name="title"
+                        <Row>
+                            <TextInput
+                                s={12}
+                                id="post-title"
+                                label="Title"
+                                value={update.title}
+                                onChange={handleInputChange}
+                                data-length={75}
+                                name="title"
+                            />
+                        </Row>
+                        <Row>
+                            <Col s={12}>
+                                <label>Labels</label>
+                                <Chip
+                                    close={false}
+                                    closeIcon={<Icon>close</Icon>}
+                                    options={{
+                                        data: chipData,
+                                        autocompleteOptions: {
+                                            data: blogLabels,
+                                        },
+                                        onChipAdd: (e, chip) => {
+                                            handleChipAdd(e[0].M_Chips.chipsData, chip)
+                                        },
+                                        onChipDelete: (e, chip) => {
+                                            handleChipDelete(chip);
+                                        }
+                                    }}
+                                    name="labels"
                                 />
-                            </Row>
-                            <Row>
-                                <Col s={12}>
-                                    <label>Labels</label>
-                                    <Chip
-                                        close={false}
-                                        closeIcon={<Icon>close</Icon>}
-                                        options={{
-                                            data: chipData,
-                                            autocompleteOptions: {
-                                                data: blogLabels,
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col s={12}>
+                                <label>Content</label>
+                                <CardPanel>
+                                    <Editor
+                                        editorState={editorState}
+                                        onEditorStateChange={handleEditorState}
+                                        toolbar={{
+                                            blockType: {
+                                                options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'Blockquote', 'Code']
                                             },
-                                            onChipAdd: (e, chip) => {
-                                                handleChipAdd(e[0].M_Chips.chipsData, chip)
-                                            },
-                                            onChipDelete: (e, chip) => {
-                                                handleChipDelete(chip);
+                                            image: {
+                                                uploadEnabled: false
                                             }
                                         }}
-                                        name="labels"
                                     />
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Textarea
-                                    required
-                                    validate
-                                    s={12}
-                                    id="post-content"
-                                    label="Content"
-                                    value={update.content}
-                                    onChange={handleInputChange}
-                                    name="content"
-                                />
-                            </Row>
-                            <Row>
-                                <Button
-                                    node="button"
-                                    type="submit"
-                                >
-                                    Submit<Icon right>send</Icon>
-                                </Button>
-                            </Row>
-                        </form>
+                                </CardPanel>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Button
+                                node="button"
+                                onClick={savePost}
+                            >
+                                Submit<Icon right>send</Icon>
+                            </Button>
+                        </Row>
                     </div>
                 </div>
             )
