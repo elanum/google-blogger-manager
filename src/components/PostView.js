@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from "react";
 import Requests from "./Requests";
 import {Button, CardPanel, Chip, Col, Icon, Modal, ProgressBar, Row} from "react-materialize";
-import dateFormat from "dateformat";
 import {Link, Redirect, useLocation, useParams} from "react-router-dom";
-import M from 'materialize-css';
+import {sendToast, formatDate, addTargetBlank, sortArray} from "../helper";
 
 /**
  * Component to show the selected post
@@ -11,7 +10,6 @@ import M from 'materialize-css';
  */
 
 const PostView = () => {
-    const dateMask = "dd.mm.yyyy, HH:MM:ss";
     const {state} = useLocation();
     const {blogId, postId} = useParams();
 
@@ -19,7 +17,7 @@ const PostView = () => {
     const [post, setPost] = useState({isLoading: true});
     const [comments, setComments] = useState({isLoading: true});
     const [postDeleted, setPostDeleted] = useState(false);
-    const [commentDeleted, setCommentDeleted] = useState(false);
+    const [triggerCommentDeleted, setTriggerCommentDeleted] = useState(false);
 
     const getPost = (bid, pid) => {
         Requests.getPost(bid, pid)
@@ -37,20 +35,35 @@ const PostView = () => {
     const getComments = (bid, pid) => {
         Requests.getComments(bid, pid)
             .then(result => {
-                if (result)
-                    setComments(result)
-                else
+                if (result) {
+                    result.sort((a, b) => sortArray('date', b.published, a.published))
+                    const groupedComments = [];
+                    result.map(c => {
+                        c['replies'] = [];
+                        if (c.inReplyTo) {
+                            let index = groupedComments.findIndex(e => e.id === c.inReplyTo.id);
+                            groupedComments[index]['replies'].push(c)
+                        } else {
+                            groupedComments.push(c);
+                        }
+                        return true;
+                    })
+                    setComments(groupedComments)
+                } else
                     setComments({isLoading: false})
             })
-            .catch(e => {
-                setError(e);
+            .catch((err) => {
+                setError(err);
             })
     }
 
     const deleteComment = (bid, pid, cid) => {
         Requests.deleteComment(bid, pid, cid)
             .then(() => {
-                setCommentDeleted(!commentDeleted);
+                setTriggerCommentDeleted(!triggerCommentDeleted);
+            })
+            .then(() => {
+                sendToast('Comment Deleted!')
             })
             .catch(err => {
                 setError(err);
@@ -58,14 +71,13 @@ const PostView = () => {
     }
 
     const deletePost = (bid, pid) => {
-        Requests.deletePost(bid, pid).then(() => {
-            setPostDeleted(true);
-        })
-    }
-
-    const addTargetBlank = content => {
-        content = content.replace("<a ", '<a target="_blank"');
-        return content;
+        Requests.deletePost(bid, pid)
+            .then(() => {
+                setPostDeleted(true);
+            })
+            .catch((err) => {
+                setError(err);
+            })
     }
 
     useEffect(() => {
@@ -73,17 +85,20 @@ const PostView = () => {
         setComments({isLoading: true});
         getPost(blogId, postId);
         if (state.success) {
-            M.toast({
-                html: state.success
-            })
+            sendToast(state.success);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [blogId, postId])
+    }, [blogId, postId, triggerCommentDeleted]);
 
     return error ?
         <Redirect to={{pathname: "/error", state: error}}/> :
         postDeleted ?
-            <Redirect to={`blogs/${blogId}`}/> :
+            <Redirect to={{
+                pathname: `/blogs/${blogId}`,
+                state: {
+                    success: 'Post deleted!'
+                }
+            }}/> :
             (
                 <div className="container">
                     {post.isLoading || comments.isLoading ? (
@@ -100,11 +115,11 @@ const PostView = () => {
                             </p>
                             <p className="valign-wrapper">
                                 <Icon>public</Icon>
-                                {dateFormat(post.published, dateMask)}
+                                {formatDate(post.published)}
                             </p>
                             <p className="valign-wrapper">
                                 <Icon>edit</Icon>
-                                {dateFormat(post.updated, dateMask)}
+                                {formatDate(post.updated)}
                             </p>
                             <p className="valign-wrapper">
                                 <Icon>comment</Icon>
@@ -121,8 +136,10 @@ const PostView = () => {
                                 to={{
                                     pathname: `/blogs/${post.blog.id}/posts/${post.id}/edit`,
                                     state: {
-                                        post: post,
-                                        labels: state.labels
+                                        post: {...post},
+                                        blog: {
+                                            labels: state.blog.labels
+                                        }
                                     }
                                 }}
                                 className="btn"
@@ -145,25 +162,54 @@ const PostView = () => {
                                 <p>Do you really want to delete "<code>{post.title}</code>"? This cannot be undone!
                                 </p>
                             </Modal>
-                            <Row>
-                                <Col s={12}>
-                                    <CardPanel>
-                                        <div dangerouslySetInnerHTML={{__html: addTargetBlank(post.content)}}/>
-                                    </CardPanel>
-                                </Col>
-                            </Row>
+
+                            <Col s={12}>
+                                <CardPanel>
+                                    <div dangerouslySetInnerHTML={{__html: addTargetBlank(post.content)}}/>
+                                </CardPanel>
+                            </Col>
+
                             <div>
                                 {comments.length && (
                                     <div>
+                                        <h4>Comments</h4>
                                         {comments.map(c => (
-                                            <div className="z-depth-1" key={c.id}>
-                                                {c.content}
-                                                <Button onClick={() => {
-                                                    deleteComment(post.blog.id, post.id, c.id);
-                                                }}>
-                                                    <Icon>delete</Icon>
-                                                </Button>
-                                            </div>
+                                            <Row key={c.id}>
+                                                <Col s={12}>
+                                                    <CardPanel>
+                                                        <Row>
+                                                            <Col s={12} offset={!c.replies.length ? 's1' : ''}>
+                                                                {c.content}
+                                                                <a className="pointer" onClick={() => {
+                                                                    deleteComment(c.blog.id, c.post.id, c.id)
+                                                                }}>
+                                                                    <Icon>delete</Icon>
+                                                                </a>
+                                                            </Col>
+                                                        </Row>
+                                                        <>
+                                                            {c.replies.length > 0 &&
+                                                            c.replies.map(r => (
+                                                                <div key={r.id}>
+                                                                    <Row>
+                                                                        <div className="divider"/>
+                                                                    </Row>
+                                                                    <Row>
+                                                                        <Col s={12} offset={!r.replies.length ? 's1' : ''}>
+                                                                            {r.content}
+                                                                            <a className="pointer" onClick={() => {
+                                                                                deleteComment(r.blog.id, r.post.id, r.id)
+                                                                            }}>
+                                                                                <Icon>delete</Icon>
+                                                                            </a>
+                                                                        </Col>
+                                                                    </Row>
+                                                                </div>
+                                                            ))}
+                                                        </>
+                                                    </CardPanel>
+                                                </Col>
+                                            </Row>
                                         ))}
                                     </div>
                                 )}
@@ -174,5 +220,6 @@ const PostView = () => {
                 </div>
             )
 }
+
 
 export default PostView;

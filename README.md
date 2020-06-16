@@ -34,6 +34,10 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+## Known Issues
+* `post.replies.totalItems` will not refresh instantly
+* Visit a page through the browsers address bar will alwyas redirect to `/` even if you're logged in
+
 ## Sources
 * [React Documentation](https://reactjs.org/docs/getting-started.html)
 * [Google Blogger API Documentation](https://developers.google.com/blogger)
@@ -54,3 +58,5 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 * [How to parse html to React component?](https://stackoverflow.com/questions/44643424/how-to-parse-html-to-react-component)
 * [google-api-javascript-client](https://github.com/google/google-api-javascript-client)
 * [How to fix missing dependency warning when using useEffect React Hook?](https://stackoverflow.com/questions/55840294/how-to-fix-missing-dependency-warning-when-using-useeffect-react-hook)
+* [http:403 forbidden error when trying to load img src with google profile pic](https://stackoverflow.com/questions/40570117/http403-forbidden-error-when-trying-to-load-img-src-with-google-profile-pic)
+* [React Draft Wysiwyg](https://jpuri.github.io/react-draft-wysiwyg/#/)

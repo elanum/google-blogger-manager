@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {Redirect, useLocation} from "react-router-dom";
+import React, {useState} from "react";
+import {Redirect, useLocation, useParams} from "react-router-dom";
 import Requests from "./Requests";
 import {Button, Chip, Col, Icon, Row, Textarea, TextInput} from "react-materialize";
 
@@ -8,31 +8,41 @@ import {Button, Chip, Col, Icon, Row, Textarea, TextInput} from "react-materiali
  *
  */
 
-const PostCreate = props => {
+const PostCreate = () => {
     const {state} = useLocation();
+    const {blogId} = useParams();
 
-    const [title] = useState(document.title);
+    const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
     const [createdPost, setCreatedPost] = useState({});
-    const [autoCompleteData] = useState(state.blog.labels);
+    const [blogLabels, setBlogLabels] = useState(state.blog.labels);
     const [chipData, setChipData] = useState([]);
 
     const savePost = event => {
         event.preventDefault();
         if (createdPost.title && createdPost.content) {
-            Requests.createPost(props.match.blogId, createdPost.title, createdPost.content, createdPost.labels).then(result => {
-                setCreatedPost(result);
-                setSuccess(true);
-            })
+            Requests.createPost(blogId, createdPost.title, createdPost.content, createdPost.labels)
+                .then(result => {
+                    setCreatedPost(result);
+                    setSuccess(true);
+                })
+                .catch((err) => {
+                    setError(err);
+                })
         }
     }
 
     const handleChipAdd = (data, object) => {
         const chip = object.firstChild.data;
-        const newLabel = createdPost.labels ? createdPost.labels : [];
-        newLabel.push(chip);
-        setCreatedPost({...createdPost, labels: newLabel});
+        const addLabels = createdPost.labels ? createdPost.labels : [];
+        const addBlogLabels = blogLabels;
+
+        addLabels.push(chip);
+        addBlogLabels[chip] = null;
+
+        setCreatedPost({...createdPost, labels: addLabels});
         setChipData(data);
+        setBlogLabels(addBlogLabels);
     }
 
     const handleChipDelete = object => {
@@ -48,82 +58,82 @@ const PostCreate = props => {
         setCreatedPost({...createdPost, [name]: value});
     }
 
-    useEffect(() => {
-        document.title = title + ": New Post"
-    }, [title])
-
-    return (
-        <div className="container">
-            <div>
-                {console.log(autoCompleteData)}
-                <h4>New Post</h4>
-                <form onSubmit={savePost}>
-                    <Row>
-                        <TextInput
-                            required
-                            validate
-                            s={12}
-                            id="post-title"
-                            label="Title"
-                            onChange={handleInputChange}
-                            data-length={75}
-                            name="title"
-                        />
-                    </Row>
-                    <Row>
-                        <Col s={12}>
-                            <label>Labels</label>
-                            <Chip
-                                close={false}
-                                closeIcon={<Icon>close</Icon>}
-                                options={{
-                                    data: chipData,
-                                    autocompleteOptions: {
-                                        data: autoCompleteData
-                                    },
-                                    onChipAdd: (e, chip) => {
-                                        handleChipAdd(e[0].M_Chips.chipsData, chip)
-                                    },
-                                    onChipDelete: (e, chip) => {
-                                        handleChipDelete(chip);
-                                    }
-                                }}
-                                name="labels"
+    return error ?
+        <Redirect to={{pathname: "/error", state: error}}/> :
+        (
+            <div className="container">
+                <div>
+                    <h4>New Post</h4>
+                    <form onSubmit={savePost}>
+                        <Row>
+                            <TextInput
+                                required
+                                validate
+                                s={12}
+                                id="post-title"
+                                label="Title"
+                                onChange={handleInputChange}
+                                data-length={75}
+                                name="title"
                             />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Textarea
-                            required
-                            validate
-                            s={12}
-                            id="post-content"
-                            label="Content"
-                            onChange={handleInputChange}
-                            name="content"
-                        />
-                    </Row>
-                    <Row>
-                        <Button
-                            node="button"
-                            type="submit"
-                        >
-                            Submit<Icon right>send</Icon>
-                        </Button>
-                    </Row>
-                </form>
+                        </Row>
+                        <Row>
+                            <Col s={12}>
+                                <label>Labels</label>
+                                <Chip
+                                    close={false}
+                                    closeIcon={<Icon>close</Icon>}
+                                    options={{
+                                        data: chipData,
+                                        autocompleteOptions: {
+                                            data: blogLabels
+                                        },
+                                        onChipAdd: (e, chip) => {
+                                            handleChipAdd(e[0].M_Chips.chipsData, chip)
+                                        },
+                                        onChipDelete: (e, chip) => {
+                                            handleChipDelete(chip);
+                                        }
+                                    }}
+                                    name="labels"
+                                />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Textarea
+                                required
+                                validate
+                                s={12}
+                                id="post-content"
+                                label="Content"
+                                onChange={handleInputChange}
+                                name="content"
+                            />
+                        </Row>
+                        <Row>
+                            <Button
+                                node="button"
+                                type="submit"
+                            >
+                                Submit<Icon right>send</Icon>
+                            </Button>
+                        </Row>
+                    </form>
+                </div>
+                {success && (
+                    <Redirect to={{
+                        pathname: `/blogs/${createdPost.blog.id}/posts/${createdPost.id}`,
+                        state: {
+                            post: {...createdPost},
+                            blog: {
+                                labels: blogLabels
+                            },
+                            success: 'Post created!'
+                        }
+                    }}/>
+                )}
             </div>
-            {success && (
-                <Redirect to={{
-                    pathname: `/blogs/${createdPost.blog.id}/posts/${createdPost.id}`,
-                    state: {
-                        post: createdPost,
-                        success: 'Post created!'
-                    }
-                }}/>
-            )}
-        </div>
-    )
+        )
 }
 
 export default PostCreate;

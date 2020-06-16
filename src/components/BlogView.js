@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import Requests from "./Requests";
 import {Link, Redirect, useLocation, useParams} from "react-router-dom";
-import {Col, Card, Icon, Chip, ProgressBar} from "react-materialize";
-import dateFormat from 'dateformat';
+import {Col, Card, Icon, Chip, ProgressBar, Modal, Button} from "react-materialize";
 import M from "materialize-css";
+import {sendToast, formatDate, transformSetToArray, sortArray} from '../helper';
 
 /**
  * Component to show all posts of the selected blog
@@ -11,7 +11,6 @@ import M from "materialize-css";
  */
 
 const BlogView = () => {
-    const dateMask = "dd.mm.yyyy, HH:MM:ss";
     const {state} = useLocation();
     const {blogId} = useParams();
 
@@ -19,6 +18,7 @@ const BlogView = () => {
     const [blog, setBlog] = useState({isLoading: true})
     const [posts, setPosts] = useState({isLoading: true});
     const [blogLabels, setBlogLabels] = useState(new Set());
+    const [triggerPostDeleted, setTriggerPostDeleted] = useState(false);
 
 
     const getBlog = (id) => {
@@ -37,6 +37,8 @@ const BlogView = () => {
     const getBlogPosts = (id) => {
         Requests.getBlogPosts(id)
             .then(result => {
+                if (result)
+                    result.sort((a, b) => sortArray('date', a.published, b.published));
                 setPosts(result);
                 getLabels(result)
             })
@@ -46,46 +48,50 @@ const BlogView = () => {
     }
 
     const getLabels = (posts) => {
-        let newLabels = new Set();
+        let set = new Set();
         if (posts && !posts.isLoading) {
             posts.map(post => {
                 if (post.labels) {
                     post.labels.map(label => {
-                        return newLabels.add(label);
+                        return set.add(label);
                     })
                 }
                 return true;
             })
         }
-        setBlogLabels(newLabels);
+        setBlogLabels(transformSetToArray(set));
     }
 
-    const setToArray = (set) => {
-        let array = Array.from(set);
-        let transform = {};
-        array.forEach(element => {
-            return transform[element] = null;
-        })
-        return transform;
+    const deletePost = (bid, pid) => {
+        Requests.deletePost(bid, pid)
+            .then(() => {
+                setTriggerPostDeleted(!triggerPostDeleted);
+            })
+            .then(() => {
+                sendToast('Post Deleted!')
+            })
+            .catch((err) => {
+                setError(err);
+            })
     }
 
     useEffect(() => {
         setBlog({isLoading: true});
         setPosts({isLoading: true});
         getBlog(blogId)
-        if (state) {
+        if (state.success) {
             M.toast({
                 html: state.success
             })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [blogId])
+    }, [blogId, triggerPostDeleted])
 
     return error ?
         <Redirect to={{pathname: "/error", state: error}}/> :
         (
             <div className="container">
-                {blog.isLoading || posts.isLoading ? (
+                {blog.isLoading || (posts && posts.isLoading) ? (
                     <div className="absolute-center">
                         <ProgressBar/>
                     </div>
@@ -96,7 +102,7 @@ const BlogView = () => {
                                 pathname: `${blogId}/posts/new`,
                                 state: {
                                     blog: {
-                                        labels: setToArray(blogLabels)
+                                        labels: blogLabels
                                     }
                                 }
                             }} className="btn-floating btn-large waves-effect">
@@ -108,19 +114,17 @@ const BlogView = () => {
                             <p>{blog.description}</p>
                         </div>
                         <div>
-                            {posts.map((post) => (
+                            {posts &&
+                            posts.map((post) => (
                                 <Col key={post.id}>
                                     <Card
                                         actions={[
                                             <Link key={`${post.id}-view`} to={{
                                                 pathname: `${blogId}/posts/${post.id}`,
                                                 state: {
-                                                    post: {
-                                                        title: post.title,
-                                                        id: post.id
-                                                    },
+                                                    post: {...post},
                                                     blog: {
-                                                        labels: setToArray(blogLabels)
+                                                        labels: blogLabels
                                                     }
                                                 }
                                             }}>
@@ -129,19 +133,31 @@ const BlogView = () => {
                                             <Link key={`${post.id}-edit`} to={{
                                                 pathname: `${blogId}/posts/${post.id}/edit`,
                                                 state: {
-                                                    post: {
-                                                        title: post.title,
-                                                        id: post.id,
-                                                        labels: post.labels
-                                                    },
+                                                    post: {...post},
                                                     blog: {
-                                                        labels: setToArray(blogLabels)
+                                                        labels: blogLabels
                                                     }
                                                 }
                                             }}>
                                                 <Icon>edit</Icon>
                                             </Link>,
-                                            /*<a key={`${post.id}-delete`}><Icon>delete</Icon></a>*/
+                                            <Modal
+                                                key={`${post.id}-delete`}
+                                                actions={[
+                                                    <Button flat modal="close" node="button" className="red white-text"
+                                                            onClick={() => {
+                                                                deletePost(post.blog.id, post.id)
+                                                            }}>Delete</Button>,
+                                                    <Button flat modal="close" node="button">Cancel</Button>
+                                                ]}
+                                                header="Confirm Deletion"
+                                                trigger={
+                                                    // eslint-disable-next-line
+                                                    <a className="pointer"><Icon>delete</Icon></a>
+                                                }
+                                            >
+                                                <p>Do you really want to delete "<code>{post.title}</code>"? This cannot be undone!</p>
+                                            </Modal>
                                         ]}
                                         title={post.title}
                                     >
@@ -151,10 +167,10 @@ const BlogView = () => {
                                                target="_blank">{post.author.displayName}</a>
                                         </p>
                                         <p className="valign-wrapper">
-                                            <Icon>public</Icon>&nbsp;{dateFormat(post.published, dateMask)}
+                                            <Icon>public</Icon>&nbsp;{formatDate(post.published)}
                                         </p>
                                         <p className="valign-wrapper">
-                                            <Icon>edit</Icon>&nbsp;{dateFormat(post.updated, dateMask)}
+                                            <Icon>edit</Icon>&nbsp;{formatDate(post.updated)}
                                         </p>
                                         <p className="valign-wrapper">
                                             <Icon>comment</Icon>&nbsp;{post.replies.totalItems}

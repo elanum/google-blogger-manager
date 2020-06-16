@@ -20,8 +20,7 @@ class Sidenav extends Component {
                         <div className="navbar-fixed">
                             <nav className="hide-on-large-only">
                                 <div className="nav-wrapper">
-                                    {
-                                        // eslint-disable-next-line
+                                    {// eslint-disable-next-line
                                     }<a data-target="nav-mobile"
                                         className="top-nav sidenav-trigger full"><i
                                     className="material-icons">menu</i></a>
@@ -40,8 +39,7 @@ class Sidenav extends Component {
                                         </div>
                                     </li>
                                     <li>
-                                        {
-                                            // eslint-disable-next-line
+                                        {// eslint-disable-next-line
                                         }<a className="sidenav-close pointer" onClick={login}>
                                             <i className="material-icons">input</i>Login
                                         </a>

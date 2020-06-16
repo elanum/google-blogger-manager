@@ -45,6 +45,7 @@ const getPost = (bid, pid) => {
             "blogId": bid,
             "postId": pid
         }).then(response => {
+            console.log(response.result);
             resolve(response.result)
         }, function (err) {
             reject(err.result.error);
@@ -107,7 +108,6 @@ const deleteComment = (bid, pid, cid) => {
             "postId": pid,
             "commentId": cid
         }).then(response => {
-            console.log(response);
             resolve(response.result);
         }, function (err) {
             reject(err.result.error);
