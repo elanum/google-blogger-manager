@@ -20,12 +20,15 @@ class AuthProvider extends Component {
         gapi.load('client:auth2', () => {
             gapi.client.init({
                 client_id: '835840484437-f27qtek3epp6n65s8gu41gv6i95n44l5.apps.googleusercontent.com',
-                scope: 'https://www.googleapis.com/auth/blogger'
+                scope: 'https://www.googleapis.com/auth/blogger',
+                discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/blogger/v3/rest']
             }).then(() => {
                 this.auth = gapi.auth2.getAuthInstance();
                 this.handleAuthChange();
                 this.auth.isSignedIn.listen(this.handleAuthChange);
-            }).catch(console.error)
+            }, function (e){
+                console.error(e);
+            })
         })
     };
 
@@ -73,4 +76,4 @@ class AuthProvider extends Component {
 }
 
 const AuthConsumer = AuthContext.Consumer;
-export {AuthProvider, AuthConsumer};
+export {AuthProvider, AuthConsumer, AuthContext};

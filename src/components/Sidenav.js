@@ -1,10 +1,13 @@
 import React, {Component} from "react";
 import {AuthConsumer} from "./GoogleAuth";
 import M from 'materialize-css'
-import UserCard from "./UserCard";
+import SidenavUser from "./SidenavUser";
 
+/**
+ * Sidenav Component
+ *
+ */
 class Sidenav extends Component {
-
     componentDidMount() {
         M.Sidenav.init(this.sidenav, {
             edge: 'left',
@@ -17,22 +20,36 @@ class Sidenav extends Component {
             <AuthConsumer>
                 {({isSignedIn, login}) => (
                     <div>
-                        <nav className="hide-on-large-only">
-                            <div className="nav-wrapper">
-                                {
-                                    // eslint-disable-next-line
-                                }<a data-target="nav-mobile"
-                                    className="top-nav sidenav-trigger full"><i
-                                className="material-icons">menu</i></a>
-                            </div>
-                        </nav>
-                        <ul id="nav-mobile" className="sidenav sidenav-fixed" ref={(sidenav) => {this.sidenav = sidenav}}>
+                        <div>
+                            <nav className="hide-on-large-only">
+                                <div className="nav-wrapper">
+                                    {// eslint-disable-next-line
+                                    }<a data-target="nav-mobile"
+                                        className="top-nav sidenav-trigger full"><i
+                                    className="material-icons">menu</i></a>
+                                </div>
+                            </nav>
+                        </div>
+                        <ul id="nav-mobile" className="sidenav sidenav-fixed" ref={(sidenav) => {
+                            this.sidenav = sidenav
+                        }}>
+
                             {!isSignedIn ? (
-                                // eslint-disable-next-line
-                                <li><a className="waves-effect" onClick={login}><i className="material-icons">input</i>Login</a>
-                                </li>
+                                <div>
+                                    <li>
+                                        <div className="user-view teal lighten-1">
+                                            <span className="white-text">AWFT</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        {// eslint-disable-next-line
+                                        }<a className="sidenav-close pointer" onClick={login}>
+                                            <i className="material-icons">input</i>Login
+                                        </a>
+                                    </li>
+                                </div>
                             ) : (
-                                <UserCard />
+                                <SidenavUser/>
                             )}
                         </ul>
                     </div>

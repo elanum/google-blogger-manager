@@ -3,7 +3,7 @@
 
 App with a connection to [Google Blogger API](https://developers.google.com/blogger) with [React](https://reactjs.org/).
 
-## Welcome
+## Google Development Account
 Username: `bloggerspa19@gmail.com`  
 Password: `A3DG?6~7`
 
@@ -34,9 +34,15 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+## Known Issues
+* `post.replies.totalItems` will not refresh instantly
+* Visit a page through the browsers address bar will alwyas redirect to `/` even if you're logged in
+
 ## Sources
 * [React Documentation](https://reactjs.org/docs/getting-started.html)
 * [Google Blogger API Documentation](https://developers.google.com/blogger)
+* [Materialize Documentation](https://materializecss.com/)
+* [react-materialize](https://github.com/react-materialize/react-materialize)
 * [Build a CRUD App in React with Hooks](https://www.taniarascia.com/crud-app-in-react-with-hooks/)
 * [React.js CRUD example to consume Web API](https://bezkoder.com/react-crud-web-api/)
 * [React Hooks CRUD example with Axios and Web API](https://bezkoder.com/react-hooks-crud-axios-api/)
@@ -48,3 +54,11 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 * [Protected Routes in React using React Router](https://www.youtube.com/watch?v=Y0-qdp-XBJg)
 * [Hooked with React - Using react router in our react application to route a dynamic page](https://learnwithparam.com/blog/book-details-page-using-react-router/)
 * [p71pr7jn50](https://codesandbox.io/s/p71pr7jn50)
+* [Display A 'Loading' Indicator In React During Ajax Requests ](https://blog.stvmlbrn.com/2017/10/14/display-loading-indicator-in-react-during-ajax-requests.html)
+* [How to parse html to React component?](https://stackoverflow.com/questions/44643424/how-to-parse-html-to-react-component)
+* [google-api-javascript-client](https://github.com/google/google-api-javascript-client)
+* [How to fix missing dependency warning when using useEffect React Hook?](https://stackoverflow.com/questions/55840294/how-to-fix-missing-dependency-warning-when-using-useeffect-react-hook)
+* [http:403 forbidden error when trying to load img src with google profile pic](https://stackoverflow.com/questions/40570117/http403-forbidden-error-when-trying-to-load-img-src-with-google-profile-pic)
+* [React Draft Wysiwyg](https://jpuri.github.io/react-draft-wysiwyg/#/)
+* [react-draft-wysiwyg: how to set default value](https://github.com/jpuri/react-draft-wysiwyg/issues/357)
+* [How to useContext in React?](https://www.robinwieruch.de/react-usecontext-hook)

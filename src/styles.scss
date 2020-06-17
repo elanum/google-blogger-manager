@@ -1,12 +1,19 @@
 /* Color Theme */
 @import "node_modules/materialize-css/sass/components/color-variables";
-$primary-color: color("deep-orange", "base") !default;
-$secondary-color: color("deep-orange", "lighten-1") !default;
+
+$primary-color: color("blue-grey", "lighten-2") !default;
 
 /* Materialize */
 @import 'node_modules/materialize-css/sass/materialize';
 
-/* Custom CSS */
+/* Rect Draft WYSIWYG */
+@import "node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg";
+
+/* Overrides */
+html {
+  background-color: color("grey", "lighten-4");
+}
+
 header, main, footer {
   padding-left: 300px;
   @media only screen and (max-width: 992px) {
@@ -14,23 +21,33 @@ header, main, footer {
   }
 }
 
-.sidenav {
-  .collapsible-header {
-    padding: 0 32px;
-  }
-  .collapsible-body li > a {
-    padding: 0 23.5px 0 47px;
-  }
-  .collapsible li.active i {
-    -ms-transform: rotate(180deg); /* IE 9 */
-    -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
-    transform: rotate(180deg);
-  }
+.progress {
+  background-color: transparent;
+}
 
-  li > button {
-    color: rgba(0, 0, 0, 0.87);
-    display: block;
-    font-size: 14px;
-    font-weight: 500;
+.modal {
+  left: 300px;
+  @media (max-width: 992px) {
+    left: 0;
   }
+}
+
+.absolute-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+p {
+  word-wrap: break-word;
+}
+
+/* Custom CSS */
+.pointer {
+  cursor: pointer;
+}
+
+li .active {
+  background-color: color("grey", "lighten-3");
 }
