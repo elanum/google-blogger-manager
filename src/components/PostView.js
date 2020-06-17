@@ -6,9 +6,7 @@ import {sendToast, formatDate, addTargetBlank, sortArray} from "../helper";
 
 /**
  * Component to show the selected post
- *
  */
-
 const PostView = () => {
     const {state} = useLocation();
     const {blogId, postId} = useParams();
@@ -23,6 +21,7 @@ const PostView = () => {
         Requests.getPost(bid, pid)
             .then(result => {
                 setPost(result);
+                document.title = result.title;
             })
             .then(() => {
                 getComments(bid, pid)
@@ -107,45 +106,6 @@ const PostView = () => {
                         </div>
                     ) : (
                         <div>
-                            <h4>{post.title}</h4>
-                            <p className="valign-wrapper">
-                                <Icon>person</Icon>
-                                <a href={post.author.url} rel="noopener noreferrer"
-                                   target="_blank">{post.author.displayName}</a>
-                            </p>
-                            <p className="valign-wrapper">
-                                <Icon>public</Icon>
-                                {formatDate(post.published)}
-                            </p>
-                            <p className="valign-wrapper">
-                                <Icon>edit</Icon>
-                                {formatDate(post.updated)}
-                            </p>
-                            <p className="valign-wrapper">
-                                <Icon>comment</Icon>
-                                {post.replies.totalItems}
-                            </p>
-                            <div>
-                                {post.labels && (
-                                    post.labels.map(l => (
-                                        <Chip key={l}>{l}</Chip>
-                                    ))
-                                )}
-                            </div>
-                            <Link
-                                to={{
-                                    pathname: `/blogs/${post.blog.id}/posts/${post.id}/edit`,
-                                    state: {
-                                        post: {...post},
-                                        blog: {
-                                            labels: state.blog.labels
-                                        }
-                                    }
-                                }}
-                                className="btn"
-                            >
-                                Edit<Icon right>edit</Icon>
-                            </Link>
                             <Modal
                                 actions={[
                                     <Button flat modal="close" node="button" className="red white-text"
@@ -156,54 +116,199 @@ const PostView = () => {
                                 ]}
                                 header="Confirm Deletion"
                                 trigger={
-                                    <Button node="button">Delete<Icon right>delete</Icon></Button>
+                                    <div className="fixed-action-btn">
+                                        { // eslint-disable-next-line
+                                        }<a className="btn-floating btn-large red"
+                                            style={{right: '79px'}}><Icon>delete</Icon></a>
+                                    </div>
                                 }
                             >
                                 <p>Do you really want to delete "<code>{post.title}</code>"? This cannot be undone!
                                 </p>
                             </Modal>
-
-                            <Col s={12}>
-                                <CardPanel>
-                                    <div dangerouslySetInnerHTML={{__html: addTargetBlank(post.content)}}/>
-                                </CardPanel>
-                            </Col>
+                            <div className="fixed-action-btn">
+                                <Link
+                                    to={{
+                                        pathname: `/blogs/${post.blog.id}/posts/${post.id}/edit`,
+                                        state: {
+                                            post: {...post},
+                                            blog: {
+                                                labels: state.blog.labels
+                                            }
+                                        }
+                                    }}
+                                    className="btn-floating btn-large"
+                                >
+                                    <Icon>edit</Icon>
+                                </Link>
+                            </div>
+                            <Row>
+                                <Col s={12}>
+                                    <CardPanel className="no-padding center">
+                                        <div className="info-header">
+                                            <h5>
+                                                <a href={post.url} target="_blank"
+                                                   rel="noopener noreferrer">{post.title}</a>
+                                            </h5>
+                                        </div>
+                                        <div className="info">
+                                            <Row>
+                                                <Col m={3} s={12}>
+                                                    <Icon className="inline">person</Icon>
+                                                    &nbsp;<a href={post.author.url} rel="noopener noreferrer"
+                                                             target="_blank">{post.author.displayName}</a>
+                                                </Col>
+                                                <Col m={3} s={12}>
+                                                    <Icon className="inline">public</Icon>
+                                                    &nbsp;{formatDate(post.published)}
+                                                </Col>
+                                                <Col m={3} s={12}>
+                                                    <Icon className="inline">edit</Icon>
+                                                    &nbsp;{formatDate(post.updated)}
+                                                </Col>
+                                                <Col m={3} s={12}>
+                                                    <Icon className="inline">comment</Icon>
+                                                    &nbsp;{post.replies.totalItems}
+                                                </Col>
+                                            </Row>
+                                            {post.labels && (
+                                                <Row>
+                                                    <br/>
+                                                    <Col s={12}>
+                                                        {post.labels.map(l => (
+                                                            <Chip key={l}>{l}</Chip>
+                                                        ))}
+                                                    </Col>
+                                                </Row>
+                                            )}
+                                        </div>
+                                    </CardPanel>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col s={12}>
+                                    <h5>Content</h5>
+                                    <CardPanel>
+                                        <div dangerouslySetInnerHTML={{__html: addTargetBlank(post.content)}}/>
+                                    </CardPanel>
+                                </Col>
+                            </Row>
 
                             <div>
                                 {comments.length && (
                                     <div>
-                                        <h4>Comments</h4>
-                                        {comments.map(c => (
-                                            <Row key={c.id}>
-                                                <Col s={12}>
+                                        <Row>
+                                            <Col s={12}>
+                                                <h5>Comments</h5>
+                                            </Col>
+                                            {comments.map(c => (
+                                                <Col key={c.id} s={12}>
                                                     <CardPanel>
                                                         <Row>
                                                             <Col s={12}>
-                                                                {c.content}
-                                                                {// eslint-disable-next-line
-                                                                }<a className="pointer" onClick={() => {
-                                                                    deleteComment(c.blog.id, c.post.id, c.id)
-                                                                }}>
-                                                                    <Icon>delete</Icon>
-                                                                </a>
+                                                                <div className="card-content">
+                                                                    <Row>
+                                                                        <Col s={11}>
+                                                                            <div className="valign-wrapper">
+                                                                                <img src={c.author.image.url}
+                                                                                     className="circle responsive-img"
+                                                                                     alt={c.author.displayName}/>
+                                                                                &nbsp;<a href={post.author.url}
+                                                                                         rel="noopener noreferrer"
+                                                                                         target="_blank">{c.author.displayName}</a>
+                                                                                &nbsp;<Icon
+                                                                                className="inline">public</Icon>
+                                                                                &nbsp;{formatDate(c.published)}
+                                                                            </div>
+                                                                        </Col>
+                                                                        <Col s={1} className="right-align">
+                                                                            <Modal
+                                                                                actions={[
+                                                                                    <Button flat modal="close"
+                                                                                            node="button"
+                                                                                            className="red white-text"
+                                                                                            onClick={() => {
+                                                                                                deleteComment(c.blog.id, c.post.id, c.id)
+                                                                                            }}>Delete</Button>,
+                                                                                    <Button flat modal="close"
+                                                                                            node="button">Cancel</Button>
+                                                                                ]}
+                                                                                header="Confirm Deletion"
+                                                                                trigger={
+                                                                                    <Button
+                                                                                        small
+                                                                                        className="red"
+                                                                                        node="button"><Icon>delete</Icon></Button>
+                                                                                }
+                                                                            >
+                                                                                <p>Do you really want to delete the
+                                                                                    comment?</p>
+                                                                                <p><code>{c.content}</code></p>
+                                                                                <p>And all answers? This cannot be undone!
+                                                                                </p>
+                                                                            </Modal>
+                                                                        </Col>
+                                                                    </Row>
+                                                                    <Row>
+                                                                        <Col s={12}>
+                                                                            {c.content}
+                                                                        </Col>
+                                                                    </Row>
+                                                                </div>
                                                             </Col>
                                                         </Row>
                                                         <>
                                                             {c.replies.length > 0 &&
                                                             c.replies.map(r => (
-                                                                <div key={r.id}>
+                                                                <div key={r.id} className="card-content">
                                                                     <Row>
                                                                         <div className="divider"/>
                                                                     </Row>
                                                                     <Row>
-                                                                        <Col s={12} offset={'s1'}>
+                                                                        <Col s={10} offset="s1">
+                                                                            <div className="valign-wrapper">
+                                                                                <img src={r.author.image.url}
+                                                                                     className="circle responsive-img"
+                                                                                     alt={r.author.displayName}/>
+                                                                                &nbsp;<a href={post.author.url}
+                                                                                         rel="noopener noreferrer"
+                                                                                         target="_blank">{r.author.displayName}</a>
+                                                                                &nbsp;<Icon
+                                                                                className="inline">public</Icon>
+                                                                                &nbsp;{formatDate(r.published)}
+                                                                            </div>
+                                                                        </Col>
+                                                                        <Col s={1} className="right-align">
+                                                                            <Modal
+                                                                                actions={[
+                                                                                    <Button flat modal="close"
+                                                                                            node="button"
+                                                                                            className="red white-text"
+                                                                                            onClick={() => {
+                                                                                                deleteComment(r.blog.id, r.post.id, r.id)
+                                                                                            }}>Delete</Button>,
+                                                                                    <Button flat modal="close"
+                                                                                            node="button">Cancel</Button>
+                                                                                ]}
+                                                                                header="Confirm Deletion"
+                                                                                trigger={
+                                                                                    <Button
+                                                                                        small
+                                                                                        className="red"
+                                                                                        node="button"><Icon>delete</Icon></Button>
+                                                                                }
+                                                                            >
+                                                                                <p>Do you really want to delete the
+                                                                                    comment?</p>
+                                                                                <p><code>{r.content}</code></p>
+                                                                                <p>This cannot be undone!
+                                                                                </p>
+                                                                            </Modal>
+                                                                        </Col>
+                                                                    </Row>
+                                                                    <Row>
+                                                                        <Col s={10} offset="s1">
                                                                             {r.content}
-                                                                            {// eslint-disable-next-line
-                                                                            }<a className="pointer" onClick={() => {
-                                                                                deleteComment(r.blog.id, r.post.id, r.id)
-                                                                            }}>
-                                                                                <Icon>delete</Icon>
-                                                                            </a>
                                                                         </Col>
                                                                     </Row>
                                                                 </div>
@@ -211,8 +316,9 @@ const PostView = () => {
                                                         </>
                                                     </CardPanel>
                                                 </Col>
-                                            </Row>
-                                        ))}
+
+                                            ))}
+                                        </Row>
                                     </div>
                                 )}
                             </div>

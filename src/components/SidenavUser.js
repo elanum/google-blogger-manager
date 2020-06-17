@@ -6,7 +6,6 @@ import {sortArray} from "../helper";
 
 /**
  * Component to switch the anchors inside the Sidenav based on the API result
- *
  */
 const SidenavUser = () => {
     const [error, setError] = useState(null);
@@ -35,7 +34,7 @@ const SidenavUser = () => {
                 {({logout, user}) => (
                     <div>
                         <li>
-                            <div className="user-view teal lighten-1">
+                            <div className="user-view">
                                 <img className="circle" src={user.image}
                                      alt="profile" referrerPolicy="no-referrer"/>
                                 <span className="white-text name">{user.name}</span>

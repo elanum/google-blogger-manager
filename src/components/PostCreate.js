@@ -1,15 +1,14 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Redirect, useLocation, useParams} from "react-router-dom";
 import Requests from "./Requests";
-import {Button, CardPanel, Chip, Col, Icon, Row, TextInput} from "react-materialize";
+import {Button, CardPanel, Chip, Col, Icon, Modal, Row, TextInput} from "react-materialize";
 import {Editor} from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import {convertToRaw, EditorState} from "draft-js";
+
 /**
  * Component to create a new post in the current blog
- *
  */
-
 const PostCreate = () => {
     const {state} = useLocation();
     const {blogId} = useParams();
@@ -67,86 +66,107 @@ const PostCreate = () => {
         setCreatedPost({...createdPost, content: html});
     }
 
+    useEffect(() => {
+        document.title = state.blog.name + ": New"
+    })
+
     return error ?
         <Redirect to={{pathname: "/error", state: error}}/> :
-        (
-            <div className="container">
-                <div>
-                    <h4>New Post</h4>
-                    <Row>
-                        <TextInput
-                            s={12}
-                            id="post-title"
-                            label="Title"
-                            onChange={handleInputChange}
-                            data-length={75}
-                            name="title"
-                        />
-                    </Row>
-                    <Row>
-                        <Col s={12}>
-                            <label>Labels</label>
-                            <Chip
-                                close={false}
-                                closeIcon={<Icon>close</Icon>}
-                                options={{
-                                    data: chipData,
-                                    autocompleteOptions: {
-                                        data: blogLabels
-                                    },
-                                    onChipAdd: (e, chip) => {
-                                        handleChipAdd(e[0].M_Chips.chipsData, chip)
-                                    },
-                                    onChipDelete: (e, chip) => {
-                                        handleChipDelete(chip);
-                                    }
-                                }}
-                                name="labels"
-                            />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col s={12}>
-                            <label>Content</label>
-                            <CardPanel>
-                                <Editor
-                                    editorState={editorState}
-                                    onEditorStateChange={handleEditorState}
-                                    toolbar={{
-                                        blockType: {
-                                            options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'Blockquote', 'Code']
+        success ?
+            <Redirect to={{
+                pathname: `/blogs/${createdPost.blog.id}/posts/${createdPost.id}`,
+                state: {
+                    post: {...createdPost},
+                    blog: {
+                        labels: blogLabels
+                    },
+                    success: 'Post created!'
+                }
+            }}/> :
+            (
+                <div className="container">
+                    <div>
+                        <Row>
+                            <Col s={12}>
+                                <CardPanel className="center deep-orange white-text">
+                                    <h5>New Post</h5>
+                                </CardPanel>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col s={12} className="no-padding">
+                                <TextInput
+                                    s={12}
+                                    id="post-title"
+                                    label="Title"
+                                    onChange={handleInputChange}
+                                    data-length={75}
+                                    name="title"
+                                />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col s={12}>
+                                <label>Labels</label>
+                                <Chip
+                                    close={false}
+                                    closeIcon={<Icon>close</Icon>}
+                                    options={{
+                                        data: chipData,
+                                        autocompleteOptions: {
+                                            data: blogLabels
                                         },
-                                        image: {
-                                            uploadEnabled: false
+                                        onChipAdd: (e, chip) => {
+                                            handleChipAdd(e[0].M_Chips.chipsData, chip)
+                                        },
+                                        onChipDelete: (e, chip) => {
+                                            handleChipDelete(chip);
                                         }
                                     }}
+                                    name="labels"
                                 />
-                            </CardPanel>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Button
-                            node="button"
-                            onClick={savePost}
-                        >
-                            Submit<Icon right>send</Icon>
-                        </Button>
-                    </Row>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col s={12}>
+                                <label>Content</label>
+                                <CardPanel>
+                                    <Editor
+                                        editorState={editorState}
+                                        onEditorStateChange={handleEditorState}
+                                        toolbar={{
+                                            blockType: {
+                                                options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'Blockquote', 'Code']
+                                            },
+                                            image: {
+                                                uploadEnabled: false
+                                            }
+                                        }}
+                                    />
+                                </CardPanel>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col s={12}>
+                                <Modal
+                                    actions={[
+                                        <Button flat modal="close" node="button" className="green white-text"
+                                                onClick={savePost}>Submit</Button>,
+                                        <Button flat modal="close" node="button">Cancel</Button>
+                                    ]}
+                                    header="Confirm Submit"
+                                    trigger={
+                                        <Button node="button" className="green right">Send<Icon
+                                            right>send</Icon></Button>
+                                    }
+                                >
+                                    <p>Already finished?</p>
+                                </Modal>
+                            </Col>
+                        </Row>
+                    </div>
                 </div>
-                {success && (
-                    <Redirect to={{
-                        pathname: `/blogs/${createdPost.blog.id}/posts/${createdPost.id}`,
-                        state: {
-                            post: {...createdPost},
-                            blog: {
-                                labels: blogLabels
-                            },
-                            success: 'Post created!'
-                        }
-                    }}/>
-                )}
-            </div>
-        )
+            )
 }
 
 export default PostCreate;

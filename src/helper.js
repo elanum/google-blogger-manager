@@ -14,7 +14,7 @@ function sendToast(content) {
 /**
  * Format a Date string to a better looking string
  *
- * @param {string} [date] '2020-06-16T10:04:00-07:00'
+ * @param {datetime} [date] '2020-06-16T10:04:00-07:00'
  *
  * @returns {string} '16. Juni 2020, 19:04:00'
  */

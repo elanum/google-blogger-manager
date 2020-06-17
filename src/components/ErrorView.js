@@ -2,6 +2,9 @@ import React, {useEffect, useState} from "react";
 import {useLocation} from 'react-router-dom';
 import {Icon} from "react-materialize";
 
+/**
+ * Component which shows up on errors
+ */
 const ErrorView = () => {
     const {state} = useLocation();
 

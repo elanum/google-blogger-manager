@@ -1,7 +1,10 @@
 /* Color Theme */
 @import "node_modules/materialize-css/sass/components/color-variables";
 
-$primary-color: color("blue-grey", "lighten-2") !default;
+$primary-color: color("deep-orange", "base") !default;
+$secondary-color: color("grey", "darken-2") !default;
+$chip-selected-color: $primary-color;
+$input-focus-color: $primary-color;
 
 /* Materialize */
 @import 'node_modules/materialize-css/sass/materialize';
@@ -9,9 +12,8 @@ $primary-color: color("blue-grey", "lighten-2") !default;
 /* Rect Draft WYSIWYG */
 @import "node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg";
 
-/* Overrides */
 html {
-  background-color: color("grey", "lighten-4");
+  background-color: color("grey", "lighten-3");
 }
 
 header, main, footer {
@@ -19,6 +21,14 @@ header, main, footer {
   @media only screen and (max-width: 992px) {
     padding-left: 0;
   }
+}
+
+p {
+  word-wrap: break-word;
+}
+
+.sidenav .user-view {
+  background-color: $primary-color;
 }
 
 .progress {
@@ -39,15 +49,46 @@ header, main, footer {
   height: 100vh;
 }
 
-p {
-  word-wrap: break-word;
-}
-
-/* Custom CSS */
 .pointer {
   cursor: pointer;
 }
 
 li .active {
   background-color: color("grey", "lighten-3");
+}
+
+.card-panel {
+  .info {
+    padding: $card-padding;
+    &-header {
+      @extend .info;
+      background-color: $primary-color;
+      color: #ffffff;
+      a {
+        color: white;
+      }
+    }
+  }
+  .row {
+    margin-bottom: 0;
+  }
+}
+
+.card-content {
+  .row {
+    margin-bottom: 0;
+    margin-top: 20px;
+  }
+}
+
+.material-icons.inline {
+  display: inline-flex;
+  vertical-align: top;
+}
+
+.valign-wrapper {
+  .center-flex {
+    align-items: center;
+    justify-content: center;
+  }
 }
