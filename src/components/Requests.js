@@ -1,5 +1,10 @@
 import {gapi} from "gapi-script";
 
+/**
+ * GET Request on '/blogs'
+ *
+ * @returns {Promise<Array>}
+ */
 const getAllBlogs = () => {
     return new Promise((resolve, reject) => {
         gapi.client.blogger.blogs.listByUser({
@@ -13,20 +18,34 @@ const getAllBlogs = () => {
     })
 }
 
-const getBlog = id => {
+/**
+ * GET Request on 'blogs/:id'
+ *
+ * @param {number} [id] blogId
+ *
+ * @returns {Promise<Object>}
+ */
+const getBlog = (id) => {
     return new Promise((resolve, reject) => {
         gapi.client.blogger.blogs.get({
             "blogId": id
         }).then(response => {
             resolve(response.result);
         }, function (err) {
-            reject(err.result.error);
             console.error("getBlog", err.result.error);
+            reject(err.result.error);
         })
     })
 }
 
-const getBlogPosts = id => {
+/**
+ * GET Request on '/blogs/:id/posts'
+ *
+ * @param {number} [id] blogId
+ *
+ * @returns {Promise<Array>}
+ */
+const getBlogPosts = (id) => {
     return new Promise((resolve, reject) => {
         gapi.client.blogger.posts.list({
             "blogId": id
@@ -39,13 +58,20 @@ const getBlogPosts = id => {
     })
 }
 
+/**
+ * GET Request on '/blogs/:bid/posts/:pid'
+ *
+ * @param {number} [bid] blogId
+ * @param {number} [pid] postId
+ *
+ * @returns {Promise<Object>}
+ */
 const getPost = (bid, pid) => {
     return new Promise((resolve, reject) => {
         gapi.client.blogger.posts.get({
             "blogId": bid,
             "postId": pid
         }).then(response => {
-            console.log(response.result);
             resolve(response.result)
         }, function (err) {
             reject(err.result.error);
@@ -54,6 +80,14 @@ const getPost = (bid, pid) => {
     })
 }
 
+/**
+ * GET Request on '/blogs/:bid/posts/:pid/comments'
+ *
+ * @param {number} [bid] blogId
+ * @param {number} [pid] postId
+ *
+ * @returns {Promise<Array>}
+ */
 const getComments = (bid, pid) => {
     return new Promise((resolve, reject) => {
         gapi.client.blogger.comments.list({
@@ -68,6 +102,17 @@ const getComments = (bid, pid) => {
     })
 }
 
+/**
+ * UPDATE Request on '/blogs/:bid/posts/:pid'
+ *
+ * @param {number}        [bid]     blogId
+ * @param {number}        [pid]     postId
+ * @param {string}        [title]   post title
+ * @param {string}        [content] content as HTML-String
+ * @param {Array<string>} [labels]  labels for the post as string-Array
+ *
+ * @returns {Promise<boolean>}
+ */
 const updatePost = (bid, pid, title, content, labels) => {
     return new Promise((resolve, reject) => {
         gapi.client.blogger.posts.update({
@@ -87,6 +132,14 @@ const updatePost = (bid, pid, title, content, labels) => {
     })
 }
 
+/**
+ * DELETE Request on '/blogs/:bid/posts/:pid'
+ *
+ * @param {number} [bid] blogId
+ * @param {number} [pid] postId
+ *
+ * @returns {Promise<boolean>}
+ */
 const deletePost = (bid, pid) => {
     return new Promise((resolve, reject) => {
         gapi.client.blogger.posts.delete({
@@ -101,6 +154,15 @@ const deletePost = (bid, pid) => {
     })
 }
 
+/**
+ * DELETE Request on '/blogs/:pid/posts/:pid/comments/:cid'
+ *
+ * @param {number} [bid] blogId
+ * @param {number} [pid] postId
+ * @param {number} [cid] commentId
+ *
+ * @returns {Promise<boolean>}
+ */
 const deleteComment = (bid, pid, cid) => {
     return new Promise((resolve, reject) => {
         gapi.client.blogger.comments.delete({
@@ -116,6 +178,16 @@ const deleteComment = (bid, pid, cid) => {
     })
 }
 
+/**
+ * POST Request on '/blogs/:id/posts'
+ *
+ * @param {number}        [id]      blogId
+ * @param {string}        [title]   post title
+ * @param {string}        [content] content as HTML-String
+ * @param {Array<string>} [labels]  labels for the post as string-Array
+ *
+ * @returns {Promise<Object>}
+ */
 const createPost = (id, title, content, labels) => {
     return new Promise((resolve, reject) => {
         gapi.client.blogger.posts.insert({

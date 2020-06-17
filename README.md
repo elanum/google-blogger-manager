@@ -3,7 +3,7 @@
 
 App with a connection to [Google Blogger API](https://developers.google.com/blogger) with [React](https://reactjs.org/).
 
-## Welcome
+## Google Development Account
 Username: `bloggerspa19@gmail.com`  
 Password: `A3DG?6~7`
 
@@ -61,3 +61,4 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 * [http:403 forbidden error when trying to load img src with google profile pic](https://stackoverflow.com/questions/40570117/http403-forbidden-error-when-trying-to-load-img-src-with-google-profile-pic)
 * [React Draft Wysiwyg](https://jpuri.github.io/react-draft-wysiwyg/#/)
 * [react-draft-wysiwyg: how to set default value](https://github.com/jpuri/react-draft-wysiwyg/issues/357)
+* [How to useContext in React?](https://www.robinwieruch.de/react-usecontext-hook)

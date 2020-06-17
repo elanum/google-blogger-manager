@@ -1,9 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {Link, Redirect} from "react-router-dom";
+import {Link, NavLink, Redirect} from "react-router-dom";
 import {AuthConsumer} from "./GoogleAuth";
 import Requests from "./Requests";
 import {sortArray} from "../helper";
 
+/**
+ * Component to switch the anchors inside the Sidenav based on the API result
+ *
+ */
 const SidenavUser = () => {
     const [error, setError] = useState(null);
     const [blogs, setBlogs] = useState([]);
@@ -31,7 +35,7 @@ const SidenavUser = () => {
                 {({logout, user}) => (
                     <div>
                         <li>
-                            <div className="user-view deep-orange">
+                            <div className="user-view teal lighten-1">
                                 <img className="circle" src={user.image}
                                      alt="profile" referrerPolicy="no-referrer"/>
                                 <span className="white-text name">{user.name}</span>
@@ -50,12 +54,12 @@ const SidenavUser = () => {
                         {blogs &&
                         blogs.map((blog) => (
                             // eslint-disable-next-line
-                            <li key={blog.id}><Link to={{
+                            <li key={blog.id}><NavLink to={{
                                 pathname: `/blogs/${blog.id}`,
                                 state: {
                                     blog: {...blog}
                                 }
-                            }} className="sidenav-close">{blog.name}</Link></li>
+                            }} className="sidenav-close" activeClassName="active" >{blog.name}</NavLink></li>
                         ))}
                         <li>
                             <div className="divider"/>

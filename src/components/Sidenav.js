@@ -3,8 +3,11 @@ import {AuthConsumer} from "./GoogleAuth";
 import M from 'materialize-css'
 import SidenavUser from "./SidenavUser";
 
+/**
+ * Sidenav Component
+ *
+ */
 class Sidenav extends Component {
-
     componentDidMount() {
         M.Sidenav.init(this.sidenav, {
             edge: 'left',
@@ -17,7 +20,7 @@ class Sidenav extends Component {
             <AuthConsumer>
                 {({isSignedIn, login}) => (
                     <div>
-                        <div className="navbar-fixed">
+                        <div>
                             <nav className="hide-on-large-only">
                                 <div className="nav-wrapper">
                                     {// eslint-disable-next-line
@@ -34,7 +37,7 @@ class Sidenav extends Component {
                             {!isSignedIn ? (
                                 <div>
                                     <li>
-                                        <div className="user-view deep-orange">
+                                        <div className="user-view teal lighten-1">
                                             <span className="white-text">AWFT</span>
                                         </div>
                                     </li>

@@ -6,18 +6,19 @@ const ErrorView = () => {
     const {state} = useLocation();
 
     const [error, setError] = useState({
-        status: 404,
+        code: 404,
         message: 'Page not found'
     })
 
     useEffect(() => {
-        setError(state)
+        if (state)
+            setError(state)
     }, [state])
 
     return (
-        <div className="container">
-            <h1 className="valign-wrapper"><Icon large>error</Icon> Error {error.code}</h1>
-            <p>{error.message}</p>
+        <div className="container center">
+            <h1><Icon large>error</Icon><br/>Error {error.code}</h1>
+            <p className="flow-text">{error.message}</p>
         </div>
     )
 }

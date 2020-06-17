@@ -1,30 +1,27 @@
 import React, {useEffect, useState} from "react";
 import Requests from "./Requests";
 import {Link, Redirect, useLocation, useParams} from "react-router-dom";
-import {Col, Card, Icon, Chip, ProgressBar, Modal, Button} from "react-materialize";
+import {Col, Card, Icon, Chip, ProgressBar, Modal, Button, Row} from "react-materialize";
 import M from "materialize-css";
 import {sendToast, formatDate, transformSetToArray, sortArray} from '../helper';
 
 /**
  * Component to show all posts of the selected blog
- *
  */
-
 const BlogView = () => {
     const {state} = useLocation();
     const {blogId} = useParams();
-
     const [error, setError] = useState(null);
     const [blog, setBlog] = useState({isLoading: true})
     const [posts, setPosts] = useState({isLoading: true});
     const [blogLabels, setBlogLabels] = useState(new Set());
     const [triggerPostDeleted, setTriggerPostDeleted] = useState(false);
 
-
     const getBlog = (id) => {
         Requests.getBlog(id)
             .then(result => {
                 setBlog(result);
+                document.title = result.name;
             })
             .then(() => {
                 getBlogPosts(id)
@@ -109,10 +106,25 @@ const BlogView = () => {
                                 <Icon>add</Icon>
                             </Link>
                         </div>
-                        <div>
-                            <h1>{blog.name}</h1>
-                            <p>{blog.description}</p>
-                        </div>
+                        <Row>
+                            <Col s={12}>
+                                <h4>{blog.name}</h4>
+                                <blockquote>{blog.description}</blockquote>
+                                <div className="divider"/>
+                            </Col>
+                            <Col m={6} s={12}>
+                                <p>{blog.url}</p>
+                            </Col>
+                            <Col m={6} s={12}>
+                                <p>{blog.posts.totalItems}</p>
+                            </Col>
+                            <Col m={6} s={12}>
+                                <p>{formatDate(blog.published)}</p>
+                            </Col>
+                            <Col m={6} s={12}>
+                                <p>{formatDate(blog.updated)}</p>
+                            </Col>
+                        </Row>
                         <div>
                             {posts &&
                             posts.map((post) => (
@@ -156,7 +168,8 @@ const BlogView = () => {
                                                     <a className="pointer"><Icon>delete</Icon></a>
                                                 }
                                             >
-                                                <p>Do you really want to delete "<code>{post.title}</code>"? This cannot be undone!</p>
+                                                <p>Do you really want to delete "<code>{post.title}</code>"? This cannot
+                                                    be undone!</p>
                                             </Modal>
                                         ]}
                                         title={post.title}

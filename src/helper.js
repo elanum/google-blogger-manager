@@ -1,11 +1,23 @@
 import M from "materialize-css";
 
-function sendToast(string) {
+/**
+ * Notification Pop-Up from materialize-css
+ *
+ * @param {string} [content] Text inside
+ */
+function sendToast(content) {
     M.toast({
-        html: string
+        html: content
     })
 }
 
+/**
+ * Format a Date string to a better looking string
+ *
+ * @param {string} [date] '2020-06-16T10:04:00-07:00'
+ *
+ * @returns {string} '16. Juni 2020, 19:04:00'
+ */
 function formatDate(date) {
     date = new Date(date);
     return date.toLocaleString([], {
@@ -19,10 +31,24 @@ function formatDate(date) {
     });
 }
 
+/**
+ * Add to all '<a>' tags the attribute '<a target="_blank">'
+ *
+ * @param {string} [content]
+ *
+ * @returns {*|void|string}
+ */
 function addTargetBlank(content) {
     return content.replace('<a ', '<a target="_blank" ');
 }
 
+/**
+ * Transforms a Set() to an Array()
+ *
+ * @param {Set} [set]
+ *
+ * @returns {Array}
+ */
 function transformSetToArray(set) {
     let array = Array.from(set);
     let transform = {};

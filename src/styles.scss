@@ -1,8 +1,7 @@
 /* Color Theme */
 @import "node_modules/materialize-css/sass/components/color-variables";
 
-$primary-color: color("deep-orange", "base") !default;
-$secondary-color: color("deep-orange", "lighten-1") !default;
+$primary-color: color("blue-grey", "lighten-2") !default;
 
 /* Materialize */
 @import 'node_modules/materialize-css/sass/materialize';
@@ -10,7 +9,11 @@ $secondary-color: color("deep-orange", "lighten-1") !default;
 /* Rect Draft WYSIWYG */
 @import "node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg";
 
-/* Custom CSS */
+/* Overrides */
+html {
+  background-color: color("grey", "lighten-4");
+}
+
 header, main, footer {
   padding-left: 300px;
   @media only screen and (max-width: 992px) {
@@ -18,9 +21,13 @@ header, main, footer {
   }
 }
 
+.progress {
+  background-color: transparent;
+}
+
 .modal {
   left: 300px;
-  @media only screen and (max-width: 992px) {
+  @media (max-width: 992px) {
     left: 0;
   }
 }
@@ -32,19 +39,15 @@ header, main, footer {
   height: 100vh;
 }
 
-.comment-image {
-  width: 200px;
+p {
+  word-wrap: break-word;
 }
 
-.chip:focus {
-  background-color: $secondary-color;
-}
-
-.chips.focus{
-  border-bottom: 1px solid $primary-color;
-  box-shadow: 0 1px 0 0 $secondary-color;
-}
-
+/* Custom CSS */
 .pointer {
   cursor: pointer;
+}
+
+li .active {
+  background-color: color("grey", "lighten-3");
 }
