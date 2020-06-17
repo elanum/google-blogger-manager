@@ -4,6 +4,9 @@ import M from "materialize-css/dist/js/materialize.min.js";
 
 const AuthContext = React.createContext();
 
+/**
+ * Initialize Google API
+ */
 class AuthProvider extends Component {
     state = {
         isSignedIn: null,

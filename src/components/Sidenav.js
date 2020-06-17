@@ -5,7 +5,6 @@ import SidenavUser from "./SidenavUser";
 
 /**
  * Sidenav Component
- *
  */
 class Sidenav extends Component {
     componentDidMount() {
@@ -20,7 +19,7 @@ class Sidenav extends Component {
             <AuthConsumer>
                 {({isSignedIn, login}) => (
                     <div>
-                        <div>
+                        <div className="navbar-fixed">
                             <nav className="hide-on-large-only">
                                 <div className="nav-wrapper">
                                     {// eslint-disable-next-line
@@ -37,7 +36,7 @@ class Sidenav extends Component {
                             {!isSignedIn ? (
                                 <div>
                                     <li>
-                                        <div className="user-view teal lighten-1">
+                                        <div className="user-view">
                                             <span className="white-text">AWFT</span>
                                         </div>
                                     </li>

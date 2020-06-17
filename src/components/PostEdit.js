@@ -1,13 +1,15 @@
 import React, {useEffect, useState} from "react";
 import Requests from "./Requests";
-import {Button, CardPanel, Chip, Col, Icon, Row, TextInput} from "react-materialize";
+import {Button, CardPanel, Chip, Col, Icon, Modal, Row, TextInput} from "react-materialize";
 import {Redirect, useLocation} from "react-router-dom";
 import {Editor} from 'react-draft-wysiwyg';
 import {EditorState, ContentState, convertToRaw} from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 
-
+/**
+ * Component to edit a post
+ */
 const PostEdit = () => {
     const {state} = useLocation();
 
@@ -80,6 +82,7 @@ const PostEdit = () => {
             setChipData(initChipData);
         }
         setInitialChips()
+        document.title = post.title + ": Edit"
     }, [post])
 
 
@@ -99,17 +102,25 @@ const PostEdit = () => {
             (
                 <div className="container">
                     <div>
-                        <h4>{post.title}</h4>
                         <Row>
-                            <TextInput
-                                s={12}
-                                id="post-title"
-                                label="Title"
-                                value={update.title}
-                                onChange={handleInputChange}
-                                data-length={75}
-                                name="title"
-                            />
+                            <Col s={12}>
+                                <CardPanel className="center deep-orange white-text">
+                                    <h5>{post.title}</h5>
+                                </CardPanel>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col s={12} className="no-padding">
+                                <TextInput
+                                    s={12}
+                                    id="post-title"
+                                    label="Title"
+                                    value={update.title}
+                                    onChange={handleInputChange}
+                                    data-length={75}
+                                    name="title"
+                                />
+                            </Col>
                         </Row>
                         <Row>
                             <Col s={12}>
@@ -153,12 +164,22 @@ const PostEdit = () => {
                             </Col>
                         </Row>
                         <Row>
-                            <Button
-                                node="button"
-                                onClick={savePost}
-                            >
-                                Submit<Icon right>send</Icon>
-                            </Button>
+                            <Col s={12}>
+                                <Modal
+                                    actions={[
+                                        <Button flat modal="close" node="button" className="green white-text"
+                                                onClick={savePost}>Submit</Button>,
+                                        <Button flat modal="close" node="button">Cancel</Button>
+                                    ]}
+                                    header="Confirm Submit"
+                                    trigger={
+                                        <Button node="button" className="green right">Send<Icon
+                                            right>send</Icon></Button>
+                                    }
+                                >
+                                    <p>Already finished?</p>
+                                </Modal>
+                            </Col>
                         </Row>
                     </div>
                 </div>
