@@ -1,13 +1,39 @@
-# Aktuelle Webtechnologien
+# AWFT
 > Manuel Schierenberg, Paul Manuel Kluge, Maxine Müller, Oliver Rascheja
 
 App with a connection to [Google Blogger API](https://developers.google.com/blogger) with [React](https://reactjs.org/).
 
 ## Google Development Account
 Username: `bloggerspa19@gmail.com`  
-Password: `A3DG?6~7`
+Password: `A3DG?6~7`  
+Client-ID: `835840484437-f27qtek3epp6n65s8gu41gv6i95n44l5.apps.googleusercontent.com`
 
-## Available Scripts
+## Setup
+1. Create a Google Account _(if you don't have one)_
+2. Visit [Google API Console](https://console.developers.google.com/)
+3. Create a Project in the top left corner
+4. Select the Project
+5. Add APIs through the Dashboard
+6. Select "Enable APIs and Services"
+7. Search and Activate "Blogger API v3" and "Google Analytics API"
+8. Create Credentials with the following settings:
+    * Which API are you using?
+        * Blogger API v3
+    * Where will you be calling the API from?
+        * Web browser (Javascript)
+    * What data will you be accessing?
+        * User data
+9. Create an OAuth 2.0 Client-ID
+    * Name
+        * AWFT
+    * Authorized JavaScript origins
+        * `https://localhost:3000` _(for development)_
+        * `https://localhost:5000` _(for standard build)_
+        * `https://yourdomain.com/` _(your domain)_
+10. Copy your created client ID
+11. Open `src/components/GoogleAuth` and replace in line 25 `<CLIENT-ID>` with your Client-ID
+
+## Scripts
 
 In the project directory, you can run:
 
@@ -19,11 +45,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
 
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
 ### `yarn build`
 
 Builds the app for production to the `build` folder.<br />
@@ -32,7 +53,19 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+For environments using [Node](https://nodejs.org/), the easiest way to handle this would be to install [serve](https://github.com/zeit/serve) and let it handle the rest:
+```
+npm install -g serve
+serve -s build
+```
+The last command shown above will serve your static site on the port **5000**. Like many of serve’s internal settings, the port can be adjusted using the `-l` or `--listen` flags:
+```
+serve -s build -l 4000
+```
+Run this command to get a full list of the options available:
+```
+serve -h
+```
 
 ## Known Issues
 * `post.replies.totalItems` will not refresh instantly
@@ -62,3 +95,4 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 * [React Draft Wysiwyg](https://jpuri.github.io/react-draft-wysiwyg/#/)
 * [react-draft-wysiwyg: how to set default value](https://github.com/jpuri/react-draft-wysiwyg/issues/357)
 * [How to useContext in React?](https://www.robinwieruch.de/react-usecontext-hook)
+* [React Deployment](https://create-react-app.dev/docs/deployment/)
