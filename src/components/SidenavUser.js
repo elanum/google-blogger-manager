@@ -58,7 +58,7 @@ const SidenavUser = () => {
                                 state: {
                                     blog: {...blog}
                                 }
-                            }} className="sidenav-close" activeClassName="active" >{blog.name}</NavLink></li>
+                            }} className="sidenav-close truncate" activeClassName="active" >{blog.name}</NavLink></li>
                         ))}
                         <li>
                             <div className="divider"/>
