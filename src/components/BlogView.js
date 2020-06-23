@@ -114,7 +114,7 @@ const BlogView = () => {
                                         <h5>
                                             <a href={blog.url} target="_blank" rel="noopener noreferrer">{blog.name}</a>
                                         </h5>
-                                        <blockquote>{blog.description}</blockquote>
+                                        <p>{blog.description}</p>
                                     </div>
                                     <div className="info">
                                         <Row>

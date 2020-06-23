@@ -52,7 +52,6 @@ const SidenavUser = () => {
                         </li>
                         {blogs &&
                         blogs.map((blog) => (
-                            // eslint-disable-next-line
                             <li key={blog.id}><NavLink to={{
                                 pathname: `/blogs/${blog.id}`,
                                 state: {
