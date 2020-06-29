@@ -3,11 +3,6 @@
 
 App with a connection to [Google Blogger API](https://developers.google.com/blogger) with [React](https://reactjs.org/).
 
-## Google Development Account
-Username: `bloggerspa19@gmail.com`  
-Password: `A3DG?6~7`  
-Client-ID: `835840484437-f27qtek3epp6n65s8gu41gv6i95n44l5.apps.googleusercontent.com`
-
 ## Setup
 1. Create a Google Account _(if you don't have one)_
 2. Visit [Google API Console](https://console.developers.google.com/)
