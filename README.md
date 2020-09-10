@@ -1,6 +1,4 @@
 # AWFT
-> Manuel Schierenberg, Paul Manuel Kluge, Maxine Müller, Oliver Rascheja
-
 App with a connection to [Google Blogger API](https://developers.google.com/blogger) with [React](https://reactjs.org/).
 
 ## Setup
