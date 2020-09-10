@@ -1,5 +1,5 @@
 # AWFT
-App with a connection to [Google Blogger API](https://developers.google.com/blogger) with [React](https://reactjs.org/).
+App with a connection to [Google Blogger API](https://developers.google.com/blogger) with [React](https://reactjs.org/) to edit blog-posts created on *Google Blogger*
 
 ## Setup
 1. Create a Google Account _(if you don't have one)_
